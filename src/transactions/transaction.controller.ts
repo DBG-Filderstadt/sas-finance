@@ -25,9 +25,11 @@ export class TransactionController{
     //Terminal hat neuen Job und schickt RFID Nummer
     @Post('/process')
     async processTransaction(
-    @Body('transactionID') terminalID: string,
+    @Body('transactionID') transactionID: string,
     @Body('rfid') rfid: string,
+    @Body('receiverID') receiverID: string,
+    @Body('amount') amount: number,
     ) {
-        return await this.transactionService.processTransaction(terminalID, rfid);
+        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount);
     }
 }
