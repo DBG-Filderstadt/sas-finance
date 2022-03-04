@@ -7,7 +7,7 @@ export class User {
   id: number;
 
   @Column()
-  chipdID: string;
+  chipID: string;
 
   @Column()
   fname: string;
