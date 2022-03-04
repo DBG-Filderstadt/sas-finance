@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -20,5 +21,15 @@ export class UserService {
         const newAmount = 100;
 
         return newAmount;
+    }
+
+    async getUser(userID): Promise<User>{
+        const user = new User();
+
+        return user;
+    }
+
+    async assignCompany(userID, companyID){
+        const user = new User();
     }
 }
