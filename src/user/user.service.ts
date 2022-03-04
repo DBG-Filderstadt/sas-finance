@@ -12,7 +12,7 @@ export class UserService {
     }
 
     async getUserBalance(userID){
-        const amount = 100;
+        const amount = 10000000;
 
         return amount;
     }
@@ -26,13 +26,18 @@ export class UserService {
         let newAmount = oldAmount - amount;
         user.balance = newAmount;
         await this.usersRepository.save(user);
-
         return newAmount;
     }
 
-    async addMoney(userID, amount){
-        const newAmount = 50;
-
+    async addMoney(chipID, amount){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID: chipID })
+        .getOne();
+        let oldAmount = user.balance;
+        let newAmount = oldAmount + amount;
+        user.balance = newAmount;
+        await this.usersRepository.save(user);
         return newAmount;
     }
 

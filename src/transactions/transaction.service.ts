@@ -37,11 +37,10 @@ export class TransactionService {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
             const receiverAmount = await this.userService.addMoney(senderID, amount);
-            const senderAmount = await this.userService.removeMoney(senderID, amount);
-            const user = await this.userService.getUser(senderID);
+            const senderAmount = await this.userService.removeMoney(receiverID, amount);
             state = "success";
             this.storeTransaction(transactionID, senderID, receiverID, amount, state);
-            return {receiverAmount, senderAmount, user};
+            return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
             state = "error";
