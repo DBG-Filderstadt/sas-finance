@@ -12,15 +12,9 @@ export class Company{
     name: string;
 
     @Column()
-    owner: string;
-
-    @Column()
-    ownerClass: string;
-
-    @Column()
     ownerID: string;
 
-    @Column()
+    @Column({nullable: true})
     balance: number;
 
     @Column()

@@ -50,7 +50,19 @@ export class UserService {
         
         return user;
         }else {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
+    }
+
+    async containUser(chipID){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID: chipID })
+        .getOne();
+        if(user){
+            return true;
+        }else {
+            return false;
         }
     }
 
