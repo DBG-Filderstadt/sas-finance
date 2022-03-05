@@ -14,7 +14,7 @@ export class AdminLogService {
         private connection: Connection, 
         private readonly userService: UserService, 
         @Inject(forwardRef(() => CompanyService)) 
-        private readonly companyService: CompanyService,) {
+        private readonly companyService: CompanyService) {
         this.adminlogRepository = connection.getRepository(AdminLog);
     }
 
