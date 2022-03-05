@@ -56,6 +56,14 @@ export class CompanyController {
         return await this.companyService.setSalary(companyID, salary);
     }
 
+    //get salary
+    @Get('/:companyID/salary')
+    async gtSalary(
+        @Param('companyID') companyID: string,
+    ) {
+        return await this.companyService.getSalary(companyID);
+    }
+
     //fetch company balance
     @Get('/:companyID/balance')
     async getBalance(

@@ -129,6 +129,12 @@ export class CompanyService {
         return company.salary;
     }
 
+    //get salary of Company
+    async getSalary(chipID){
+        let company = await this.getCompany(chipID);
+        return company.salary;
+    }
+
     /*
     * Company Balance
     */
@@ -188,6 +194,10 @@ export class CompanyService {
 
     //remove Staff from Company
     async removeStaff(chipID, staffID){
+        let company = await this.getCompany(chipID);
+        if (company.ownerID == staffID){
+            throw new ConflictException('Du kannst den Besitzer nicht entfernen!');
+        }
         return await this.userService.removeCompany(staffID, chipID);
     }
     

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -76,7 +76,7 @@ export class UserService {
         .getOne();
         if(user){
             if (user.company) {
-                throw new NotFoundException('Benutzer ist bereits in einem Unternehmen');
+                throw new ConflictException('Benutzer ist bereits in einem Unternehmen');
             }
             user.company = companyID;
             await this.usersRepository.save(user);
