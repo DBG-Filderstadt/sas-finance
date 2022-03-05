@@ -28,4 +28,13 @@ export class CompanyController {
     ) {
         return await this.companyService.getCompany(companyID);
     }
+
+    //lock and unlock Company
+    @Post('/:companyID/lock')
+    async lockCompany(
+        @Param('companyID') companyID: string,
+        @Body('lock') lock: boolean,
+    ) {
+        return await this.companyService.lockCompany(companyID, lock);
+    }
 }
