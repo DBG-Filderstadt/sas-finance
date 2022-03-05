@@ -16,11 +16,9 @@ export class CompanyController {
     async createCompany(
     @Body('chipID') chipID: string,
     @Body('name') name: string,
-    @Body('owner') owner: string,
-    @Body('ownerClass') ownerClass: string,
     @Body('ownerID') ownerID: string,
     ) {
-        return await this.companyService.createCompany(chipID, name, owner, ownerID, ownerClass);
+        return await this.companyService.createCompany(chipID, name, ownerID);
     }
 
     //Fetch Company by ID
