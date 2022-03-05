@@ -14,7 +14,10 @@ export class CompanyService {
 
     //Fetch all Companys from Database
     async getAllCompanys() {
-        return 'All Companys';
+        const companys = await this.companyRepository
+        .createQueryBuilder("company")
+        .getMany();
+        return companys;
     }
 
     //Fetch Company by ID
@@ -66,6 +69,14 @@ export class CompanyService {
         return result;
     }
 
+    //lock and unlock Company
+    async lockCompany(chipID, lock){
+        let company = await this.getCompany(chipID);
+        company.isLocked = lock;
+        this.companyRepository.save(company);
+        return company.isLocked;
+    }
+
     async removeMoney(chipID, amount){
         const company = await this.companyRepository
         .createQueryBuilder("company")
@@ -89,4 +100,28 @@ export class CompanyService {
         await this.companyRepository.save(company);
         return newAmount;
     }
+
+    async getCompanyByOwner(ownerID){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.ownerID = :ownerID", { ownerID })
+        .getOne();
+        if(company){
+            return company;
+        }
+        throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    async getCompanyByName(name){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.name = :name", { name })
+        .getOne();
+        if(company){
+            return company;
+        }
+        throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    
 }
