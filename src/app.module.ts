@@ -11,10 +11,10 @@ import { TerminalJobModule } from './terminal-job/terminal-job.module';
   imports: [TypeOrmModule.forRoot({
     
       type: "mysql",
-      host: "localhost",
+      host: "zap326159-1.plesk09.zap-webspace.com",
       port: 3306,
-      username: "root",
-      password: "",
+      username: "sasdbg",
+      password: "SAS-DB3-NEST",
       database: "sas",
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
