@@ -77,7 +77,7 @@ export class TransactionService {
     //Company -> User
     if(code === 303) {
         //Überprüfung ob Sender genügend Geld hat
-        const senderBalance = await this.companyService.getCompanyBalance(senderID);
+        const senderBalance = await this.companyService.getBalance(senderID);
         if (senderBalance > amount) {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
