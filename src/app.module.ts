@@ -4,9 +4,23 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TransactionModule } from './transactions/transaction.module';
 import { UserModule } from './user/user.module';
+import { CompanyModule } from './company/company.module';
+import { TerminalJobModule } from './terminal-job/terminal-job.module';
+import { AdminLogModule } from './admin-log/admin-log.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), TransactionModule, UserModule],
+  imports: [TypeOrmModule.forRoot({
+    
+      type: "mysql",
+      host: "zap326159-1.plesk09.zap-webspace.com",
+      port: 3306,
+      username: "sasdbg",
+      password: "SAS-DB3-NEST",
+      database: "sas",
+      entities: ["dist/**/*.entity{.ts,.js}"],
+      synchronize: true,
+      autoLoadEntities: true,
+  }), TransactionModule, UserModule, CompanyModule, TerminalJobModule, AdminLogModule],
   controllers: [AppController],
   providers: [AppService],
 })

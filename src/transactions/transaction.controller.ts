@@ -17,7 +17,8 @@ export class TransactionController{
     }
 
     //Terminal fragt nach neuem Job
-    @Get(':terminalID')
+    //@Param terminalID
+    @Get('/get/:terminalID')
     async getTransactions(@Param('terminalID') terminalID: string) {
         return await this.transactionService.getTransactions(terminalID);
     }
@@ -25,9 +26,18 @@ export class TransactionController{
     //Terminal hat neuen Job und schickt RFID Nummer
     @Post('/process')
     async processTransaction(
-    @Body('transactionID') terminalID: string,
+    @Body('transactionID') transactionID: string,
     @Body('rfid') rfid: string,
+    @Body('receiverID') receiverID: string,
+    @Body('amount') amount: number,
+    @Body('code') code: number,
     ) {
-        return await this.transactionService.processTransaction(terminalID, rfid);
+        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount, code);
+    }
+
+    @Post('/revoke')
+    async revokeTransaction(
+    @Body('transactionID') transactionID: string){
+        return await this.transactionService.revokeTransaction(transactionID);
     }
 }

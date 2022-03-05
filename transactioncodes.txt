@@ -1,0 +1,3 @@
+101 = User kauft bei Firma ein
+202 = User überweißt an User
+303 = Company überweißt User Geld

@@ -7,7 +7,7 @@ export class User {
   id: number;
 
   @Column()
-  chipdID: string;
+  chipID: string;
 
   @Column()
   fname: string;
@@ -21,10 +21,10 @@ export class User {
   @Column()
   balance: number;
 
-  @Column()
+  @Column({nullable: true})
   role?: string;
 
-  @Column()
+  @Column({nullable: true})
   company?: string;
 
   @Column()
