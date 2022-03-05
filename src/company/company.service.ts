@@ -12,6 +12,10 @@ export class CompanyService {
         this.companyRepository = connection.getRepository(Company);
     }
 
+    /*
+    * Fetch Company
+    */
+
     //Fetch all Companys from Database
     async getAllCompanys() {
         const companys = await this.companyRepository
@@ -32,6 +36,34 @@ export class CompanyService {
             return company;
         }
     }
+
+    //Fetch Company by OwnerID
+    async getCompanyByOwner(ownerID){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.ownerID = :ownerID", { ownerID })
+        .getOne();
+        if(company){
+            return company;
+        }
+        throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    //Fetch Company by Name
+    async getCompanyByName(name){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.name = :name", { name })
+        .getOne();
+        if(company){
+            return company;
+        }
+        throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    /*
+    * Create Company
+    */
 
     //Create Company in Database
     async createCompany(chipID, name, ownerID) {
@@ -69,6 +101,10 @@ export class CompanyService {
         return result;
     }
 
+    /*
+    * Update Company
+    */
+
     //lock and unlock Company
     async lockCompany(chipID, lock){
         let company = await this.getCompany(chipID);
@@ -77,6 +113,39 @@ export class CompanyService {
         return company.isLocked;
     }
 
+    //set Open Positions of Company
+    async setOpenPositions(chipID, openPositions){
+        let company = await this.getCompany(chipID);
+        company.openPositions = openPositions;
+        this.companyRepository.save(company);
+        return company.openPositions;
+    }
+
+    //set salary of Company
+    async setSalary(chipID, salary){
+        let company = await this.getCompany(chipID);
+        company.salary = salary;
+        this.companyRepository.save(company);
+        return company.salary;
+    }
+
+    /*
+    * Company Balance
+    */
+
+    //Get Balance of Company
+    async getBalance(chipID){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.chipID = :chipID", { chipID })
+        .getOne();
+        if(company){
+            return company.balance;
+        }
+        throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    //Remove Money from Company
     async removeMoney(chipID, amount){
         const company = await this.companyRepository
         .createQueryBuilder("company")
@@ -89,6 +158,7 @@ export class CompanyService {
         return newAmount;
     }
 
+    //add Money to Company
     async addMoney(chipID, amount){
         const company = await this.companyRepository
         .createQueryBuilder("company")
@@ -101,27 +171,24 @@ export class CompanyService {
         return newAmount;
     }
 
-    async getCompanyByOwner(ownerID){
-        const company = await this.companyRepository
-        .createQueryBuilder("company")
-        .where("company.ownerID = :ownerID", { ownerID })
-        .getOne();
-        if(company){
-            return company;
-        }
-        throw new NotFoundException('Unternehmen nicht gefunden!');
+    /*
+     * Company Staff
+    */ 
+
+    //get all Staff of Company
+    async getStaff(chipID){
+        let all = await this.userService.getStaff(chipID);
+        return all;
     }
 
-    async getCompanyByName(name){
-        const company = await this.companyRepository
-        .createQueryBuilder("company")
-        .where("company.name = :name", { name })
-        .getOne();
-        if(company){
-            return company;
-        }
-        throw new NotFoundException('Unternehmen nicht gefunden!');
+    //add Staff to Company
+    async addStaff(chipID, staffID){
+        return await this.userService.assignCompany(staffID, chipID);;
     }
 
+    //remove Staff from Company
+    async removeStaff(chipID, staffID){
+        return await this.userService.removeCompany(staffID, chipID);
+    }
     
 }

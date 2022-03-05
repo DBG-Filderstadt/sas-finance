@@ -75,11 +75,43 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID })
         .getOne();
         if(user){
+            if (user.company) {
+                throw new NotFoundException('Benutzer ist bereits in einem Unternehmen');
+            }
             user.company = companyID;
             await this.usersRepository.save(user);
-        return user;
+            return user;
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');
         }
+    }
+
+    async removeCompany(chipID, companyID){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if (!user) {
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
+        if (!user.company) {
+            throw new NotFoundException('Benutzer hat keine Firma');
+        }
+        if(user.company == companyID){
+            user.company = null;
+            await this.usersRepository.save(user);
+            return user;
+        }else {
+            throw new NotFoundException('Benutzer ist nicht in der angegebenen Firma');
+        }
+    }
+
+
+    async getStaff(companyID){
+        const users = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.company = :companyID", { companyID })
+        .getMany();
+        return users;
     }
 }
