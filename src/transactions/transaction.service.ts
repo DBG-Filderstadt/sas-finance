@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { STATUS_CODES } from "http";
+import { CompanyService } from "src/company/company.service";
 import { TerminalJobService } from "src/terminal-job/terminal-job.service";
 import { UserService } from "src/user/user.service";
 import { Connection, Repository } from "typeorm";
@@ -8,7 +9,7 @@ import { Transactions } from "./transaction.entity";
 @Injectable()
 export class TransactionService {
     transactionRepository: Repository<Transactions>;
-    constructor(private readonly userService: UserService, private readonly jobService: TerminalJobService, private connection: Connection) {
+    constructor(private readonly userService: UserService, private readonly jobService: TerminalJobService, private connection: Connection, private readonly companyService: CompanyService) {
         this.transactionRepository = connection.getRepository(Transactions);
     }
 
@@ -35,7 +36,23 @@ export class TransactionService {
         let stateReason:string;
         if(!code){
         code = 101;
+        const senderBalance = await this.userService.getUserBalance(senderID);
+        if (senderBalance > amount) {
+            //wenn ja speichere Transaktion in transactionHistory Datenbank
+            //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
+            const receiverAmount = await this.companyService.addMoney(receiverID, amount);
+            const senderAmount = await this.userService.removeMoney(senderID, amount);
+            state = "success";
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
+            return {receiverAmount, senderAmount};
+        }else {
+            //wenn nein sende Fehler
+            state = "aborted";
+            stateReason = "Insufficient funds";
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason);
+            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
         }
+        }if(code == 202)  {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount) {
@@ -53,7 +70,7 @@ export class TransactionService {
             this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason);
             throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
         }
-        
+    }
 
         
     }

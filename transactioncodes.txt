@@ -1,2 +1,3 @@
 101 = Einkauf bei Firma
 202 = Banküberweisung
+303 = Company überweißt User Geld
