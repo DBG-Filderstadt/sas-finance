@@ -114,4 +114,33 @@ export class UserService {
         .getMany();
         return users;
     }
+
+    //function to lock/unlock a user
+    //@Param chipID: string 
+    //@Param locked: boolean
+    async lockUser(chipID, locked){
+
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            if(locked == true && user.isLocked == false){
+                user.isLocked = locked;
+                await this.usersRepository.save(user);
+                return "Benutzer "+user.fname + " " + user.lname + " wurde gesperrt.";
+            }else if(locked == true && user.isLocked == true){
+                return "Benutzer "+user.fname + " " + user.lname + " ist bereits gesperrt.";
+            }
+            if(locked == false && user.isLocked == true){
+                user.isLocked = locked;
+                await this.usersRepository.save(user);
+                return "Benutzer "+user.fname + " " + user.lname + " wurde entsperrt.";;
+            }else {
+                return "Benutzer "+user.fname + " " + user.lname + " ist bereits entsperrt.";
+            }
+        }else {
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
+    }
 }
