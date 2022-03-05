@@ -23,7 +23,7 @@ export class CompanyService {
 
     //Fetch all Companys from Database
     async getAllCompanys(actorID) {
-        //await this.adminLogService.log(actorID, '', 'Datenabfrage', 'API GET (/company) | Alle Coampanys abgerufen', 'OK')
+        await this.adminLogService.log(actorID, '', 'Datenabfrage', 'API GET (/company) | Alle Coampanys abgerufen', 'OK')
         const companys = await this.companyRepository
         .createQueryBuilder("company")
         .getMany();
