@@ -7,8 +7,10 @@ export class CompanyController {
 
     //Fetch all Companys from Database
     @Get('/')
-    async getAllCompanys() {
-        return await this.companyService.getAllCompanys();
+    async getAllCompanys(
+        @Body('actorID') actorID: string,
+    ) {
+        return await this.companyService.getAllCompanys(actorID);
     }
 
     //Create Company in Database
@@ -93,5 +95,12 @@ export class CompanyController {
         @Body('staffID') staffID: string,
     ) {
         return await this.companyService.removeStaff(companyID, staffID);
+    }
+
+    @Post('/:companyID/payout')
+    async payout(
+        @Param('companyID') companyID: string,
+    ) {
+        return await this.companyService.payout(companyID);
     }
 }

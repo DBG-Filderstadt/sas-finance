@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { STATUS_CODES } from 'http';
+import { AdminLogService } from 'src/admin-log/admin-log.service';
 import { UserService } from 'src/user/user.service';
 import { Connection, Repository } from 'typeorm';
 import { Company } from './company.entity';
@@ -8,7 +9,7 @@ import { Company } from './company.entity';
 export class CompanyService {
     companyRepository: Repository<Company>;
 
-    constructor(private connection: Connection, private readonly userService: UserService) {
+    constructor(private connection: Connection, private readonly userService: UserService, ) { //private readonly adminLogService: AdminLogService
         this.companyRepository = connection.getRepository(Company);
     }
 
@@ -17,7 +18,8 @@ export class CompanyService {
     */
 
     //Fetch all Companys from Database
-    async getAllCompanys() {
+    async getAllCompanys(actorID) {
+        //await this.adminLogService.log(actorID, '', 'Datenabfrage', 'API GET (/company) | Alle Coampanys abgerufen', 'OK')
         const companys = await this.companyRepository
         .createQueryBuilder("company")
         .getMany();
@@ -59,6 +61,19 @@ export class CompanyService {
             return company;
         }
         throw new NotFoundException('Unternehmen nicht gefunden!');
+    }
+
+    //Ceck if Company exists
+    async companyExists(chipID){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.chipID = :chipID", { chipID })
+        .getOne();
+        if(company){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -199,6 +214,29 @@ export class CompanyService {
             throw new ConflictException('Du kannst den Besitzer nicht entfernen!');
         }
         return await this.userService.removeCompany(staffID, chipID);
+    }
+
+    /*
+    * Company Salary
+    */
+
+    async payout(chipID){
+        let company = await this.getCompany(chipID);
+        let staff = await this.getStaff(chipID);
+        let salary = company.salary;
+        let balance = company.balance;
+        let expenses = salary * staff.length;
+        if (expenses > balance){
+            throw new ConflictException('Das Unternehmen hat nicht genügend Geld, um alle Mitarbeiter zu bezahlen!');
+        }
+        await staff.forEach(async (member) => {
+            let user = await this.userService.getUser(member.chipID);
+            await this.userService.addMoney(user.chipID, salary);
+            await this.removeMoney(chipID, salary);
+        })
+
+
+        return balance - expenses;
     }
     
 }
