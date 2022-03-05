@@ -48,6 +48,7 @@ export class CompanyService {
         }
 
         let owner = await this.userService.getUser(ownerID);
+        await this.userService.assignCompany(ownerID, chipID);
 
         let company = new Company();
         company.chipID = chipID;
@@ -58,6 +59,10 @@ export class CompanyService {
         company.lastUsed = new Date();
 
         await this.companyRepository.save(company);
-        return company;
+        let result = {
+            company,
+            owner,
+        }
+        return result;
     }
 }

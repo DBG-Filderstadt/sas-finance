@@ -21,5 +21,13 @@ export class Company{
     isLocked: boolean;
 
     @Column()
+    salary: number;
+
+    @Column()
+    openPositions: boolean;
+
+    @Column()
     lastUsed: Date;
+
+
 }

@@ -66,7 +66,17 @@ export class UserService {
         }
     }
 
-    async assignCompany(userID, companyID){
-        const user = new User();
+    async assignCompany(chipID, companyID){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            user.company = companyID;
+            await this.usersRepository.save(user);
+        return user;
+        }else {
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
     }
 }
