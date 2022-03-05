@@ -11,11 +11,11 @@ import { TerminalJobModule } from './terminal-job/terminal-job.module';
   imports: [TypeOrmModule.forRoot({
     
       type: "mysql",
-      host: "localhost",
+      host: "db4free.net",
       port: 3306,
-      username: "root",
-      password: "",
-      database: "sas",
+      username: "dbgsas",
+      password: "SAS-DB3-NEST",
+      database: "staatsdb",
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
       autoLoadEntities: true,

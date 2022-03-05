@@ -34,6 +34,7 @@ export class TransactionService {
     async processTransaction(transactionID, senderID, receiverID, amount, code?) {
         let state = "pending";
         let stateReason:string;
+        //User -> company
         if(!code){
         code = 101;
         const senderBalance = await this.userService.getUserBalance(senderID);
@@ -51,8 +52,10 @@ export class TransactionService {
             stateReason = "Insufficient funds";
             this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason);
             throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
+            }
         }
-        }if(code == 202)  {
+        //User -> User
+        if(code == 202)  {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount) {
@@ -60,6 +63,26 @@ export class TransactionService {
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
             const receiverAmount = await this.userService.addMoney(receiverID, amount);
             const senderAmount = await this.userService.removeMoney(senderID, amount);
+            state = "success";
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
+            return {receiverAmount, senderAmount};
+        }else {
+            //wenn nein sende Fehler
+            state = "aborted";
+            stateReason = "Insufficient funds";
+            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason);
+            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
+        }
+    }
+    //Company -> User
+    if(code === 303) {
+        //Überprüfung ob Sender genügend Geld hat
+        const senderBalance = await this.userService.getUserBalance(senderID);
+        if (senderBalance > amount) {
+            //wenn ja speichere Transaktion in transactionHistory Datenbank
+            //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
+            const receiverAmount = await this.userService.addMoney(receiverID, amount);
+            const senderAmount = await this.companyService.removeMoney(senderID, amount);
             state = "success";
             this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
             return {receiverAmount, senderAmount};
