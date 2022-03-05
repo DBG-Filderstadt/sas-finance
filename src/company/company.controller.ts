@@ -12,7 +12,7 @@ export class CompanyController {
     }
 
     //Create Company in Database
-    @Post('/create')
+    @Post('/create') 
     async createCompany(
     @Body('chipID') chipID: string,
     @Body('name') name: string,
@@ -36,5 +36,54 @@ export class CompanyController {
         @Body('lock') lock: boolean,
     ) {
         return await this.companyService.lockCompany(companyID, lock);
+    }
+
+    //set open Positions
+    @Post('/:companyID/openPositions')
+    async setOpenPositions(
+        @Param('companyID') companyID: string,
+        @Body('openPositions') openPositions: boolean,
+    ) {
+        return await this.companyService.setOpenPositions(companyID, openPositions);
+    }
+
+    //set salary
+    @Post('/:companyID/salary')
+    async setSalary(
+        @Param('companyID') companyID: string,
+        @Body('salary') salary: number,
+    ) {
+        return await this.companyService.setSalary(companyID, salary);
+    }
+
+    //fetch company balance
+    @Get('/:companyID/balance')
+    async getBalance(
+        @Param('companyID') companyID: string,
+    ) {
+        return await this.companyService.getBalance(companyID);
+    }
+
+    @Get('/:companyID/staff')
+    async getStaff(
+        @Param('companyID') companyID: string,
+    ) {
+        return await this.companyService.getStaff(companyID);
+    }
+
+    @Post('/:companyID/staff/add')
+    async addStaff(
+        @Param('companyID') companyID: string,
+        @Body('staffID') staffID: string,
+    ) {
+        return await this.companyService.addStaff(companyID, staffID);
+    }
+
+    @Post('/:companyID/staff/remove')
+    async removeStaff(
+        @Param('companyID') companyID: string,
+        @Body('staffID') staffID: string,
+    ) {
+        return await this.companyService.removeStaff(companyID, staffID);
     }
 }
