@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CompanyService } from 'src/company/company.service';
 import { UserService } from 'src/user/user.service';
 import { Connection, Repository } from 'typeorm';
@@ -10,7 +10,11 @@ type action =  'Datenabfrage' | 'Test'
 export class AdminLogService {
     adminlogRepository: Repository<AdminLog>;
 
-    constructor(private connection: Connection, private readonly userService: UserService, private readonly companyService: CompanyService) {
+    constructor(
+        private connection: Connection, 
+        private readonly userService: UserService, 
+        @Inject(forwardRef(() => CompanyService)) 
+        private readonly companyService: CompanyService,) {
         this.adminlogRepository = connection.getRepository(AdminLog);
     }
 

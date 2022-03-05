@@ -7,7 +7,7 @@ import { AdminLog } from './admin-log.entity';
 import { AdminLogService } from './admin-log.service';
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forFeature([AdminLog]),forwardRef(()=> CompanyModule) ],
+  imports: [UserModule, TypeOrmModule.forFeature([AdminLog]), forwardRef(() => CompanyModule)],
   controllers: [AdminLogController],
   providers: [AdminLogService],
   exports: [AdminLogService, TypeOrmModule]

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { STATUS_CODES } from 'http';
 import { AdminLogService } from 'src/admin-log/admin-log.service';
 import { UserService } from 'src/user/user.service';
@@ -9,7 +9,11 @@ import { Company } from './company.entity';
 export class CompanyService {
     companyRepository: Repository<Company>;
 
-    constructor(private connection: Connection, private readonly userService: UserService, ) { //private readonly adminLogService: AdminLogService
+    constructor(
+        @Inject(forwardRef(() => AdminLogService))  
+        private adminLogService: AdminLogService,
+        private connection: Connection, 
+        private readonly userService: UserService, ) { 
         this.companyRepository = connection.getRepository(Company);
     }
 
