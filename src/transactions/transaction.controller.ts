@@ -17,7 +17,8 @@ export class TransactionController{
     }
 
     //Terminal fragt nach neuem Job
-    @Get(':terminalID')
+    //@Param terminalID
+    @Get('/get/:terminalID')
     async getTransactions(@Param('terminalID') terminalID: string) {
         return await this.transactionService.getTransactions(terminalID);
     }
@@ -29,7 +30,8 @@ export class TransactionController{
     @Body('rfid') rfid: string,
     @Body('receiverID') receiverID: string,
     @Body('amount') amount: number,
+    @Body('code') code: number,
     ) {
-        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount);
+        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount, code);
     }
 }

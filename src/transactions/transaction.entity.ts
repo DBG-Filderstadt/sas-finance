@@ -14,19 +14,19 @@ export class Transactions {
     @Column()
     amount: number;
 
-    @Column()
-    byBankID?: string;
+    @Column({nullable: true})
+    code: string;
 
     @Column()
     transactionID: string;
 
-    @Column()
+    @Column({nullable: true})
     statusReason: string;
 
     @Column()
     status: string;
 
-    @Column()
+    @Column({nullable: true})
     purpose: string;
 
     @Column()

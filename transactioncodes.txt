@@ -1,0 +1,2 @@
+101 = Einkauf bei Firma
+202 = Banküberweisung
