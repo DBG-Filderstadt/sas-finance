@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { CompanyModule } from './company/company.module';
 import { TerminalJobModule } from './terminal-job/terminal-job.module';
 import { AdminLogModule } from './admin-log/admin-log.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -20,7 +21,7 @@ import { AdminLogModule } from './admin-log/admin-log.module';
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
       autoLoadEntities: true,
-  }), TransactionModule, UserModule, CompanyModule, TerminalJobModule, AdminLogModule],
+  }), TransactionModule, UserModule, CompanyModule, TerminalJobModule, AdminLogModule, AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
