@@ -34,4 +34,10 @@ export class TransactionController{
     ) {
         return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount, code);
     }
+
+    @Post('/revoke')
+    async revokeTransaction(
+    @Body('transactionID') transactionID: string){
+        return await this.transactionService.revokeTransaction(transactionID);
+    }
 }

@@ -58,7 +58,7 @@ export class TransactionService {
         if(code == 202)  {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
-        if (senderBalance > amount) {
+        if (senderBalance > amount || senderBalance === amount) {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
             const receiverAmount = await this.userService.addMoney(receiverID, amount);
@@ -77,7 +77,7 @@ export class TransactionService {
     //Company -> User
     if(code === 303) {
         //Überprüfung ob Sender genügend Geld hat
-        const senderBalance = await this.userService.getUserBalance(senderID);
+        const senderBalance = await this.companyService.getCompanyBalance(senderID);
         if (senderBalance > amount) {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
@@ -98,6 +98,34 @@ export class TransactionService {
         
     }
 
+    async revokeTransaction(transactionID) {
+        const transaction = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .where("transaction.transactionID = :transactionID", { transactionID: transactionID })
+        .getOne();
+        if(transaction.status === "aborted" || transaction.status === "revoked"){
+            throw new UnauthorizedException("Die Transaktion wurde bereits abgebrochen");
+        }
+        transaction.status = "revoked";
+        const receiverID = transaction.receiverID;
+        const senderID = transaction.senderID;
+        const amount = transaction.amount;
+        const code = transaction.code;
+        if(code === "101"){
+        await this.userService.addMoney(senderID, amount);
+        await this.companyService.removeMoney(receiverID, amount);
+        }
+        if(code === "202"){
+            await this.userService.addMoney(senderID, amount);
+            await this.userService.removeMoney(receiverID, amount);
+        }
+        if(code === "303"){
+            await this.companyService.addMoney(senderID, amount);
+            await this.userService.removeMoney(receiverID, amount);
+        }
+        await this.transactionRepository.save(transaction);
+        return transaction;
+    }
     async storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason?) {
         const transaction = new Transactions();
         transaction.receiverID = receiverID;
