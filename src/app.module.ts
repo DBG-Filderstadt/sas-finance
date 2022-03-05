@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { TransactionModule } from './transactions/transaction.module';
 import { UserModule } from './user/user.module';
 import { CompanyModule } from './company/company.module';
+import { TerminalJobModule } from './terminal-job/terminal-job.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -18,7 +19,7 @@ import { CompanyModule } from './company/company.module';
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
       autoLoadEntities: true,
-  }), TransactionModule, UserModule, CompanyModule],
+  }), TransactionModule, UserModule, CompanyModule, TerminalJobModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -11,9 +11,12 @@ export class UserService {
         this.usersRepository = connection.getRepository(User);
     }
 
-    async getUserBalance(userID){
-        const amount = 10000000;
-
+    async getUserBalance(chipID){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID: chipID })
+        .getOne();
+        const amount = user.balance;
         return amount;
     }
 

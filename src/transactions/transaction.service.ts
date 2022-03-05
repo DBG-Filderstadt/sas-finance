@@ -1,58 +1,73 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { STATUS_CODES } from "http";
+import { TerminalJobService } from "src/terminal-job/terminal-job.service";
 import { UserService } from "src/user/user.service";
+import { Connection, Repository } from "typeorm";
+import { Transactions } from "./transaction.entity";
 
 @Injectable()
 export class TransactionService {
-    constructor(private readonly userService: UserService) {}
+    transactionRepository: Repository<Transactions>;
+    constructor(private readonly userService: UserService, private readonly jobService: TerminalJobService, private connection: Connection) {
+        this.transactionRepository = connection.getRepository(Transactions);
+    }
 
     async createTransaction(terminalID, receiverID, amount, transactionID) {
         //table Jobs in database
+        await this.jobService.insertJob(transactionID, terminalID, receiverID, amount);
 
         return null;
     }
 
     async getTransactions(terminalID) {
-        //Suche Job für Terminal aus Datenbank und gebe diesen zurück
-        const amount = 100;
-        const transactionID = "12345";
-        const receiverID = "12345";
-        const job = {
-            amount,
-            transactionID,
-            terminalID,
-            receiverID,
-        };
-
+        const job = await this.jobService.getJob(terminalID);
+        await this.jobService.deleteJob(terminalID);
+        if(job){
         return job;
+        }else {
+            return null;
+        }
     }
 
     //Führt die sender und receiver id zusammen und leitet die Transaktion ein
-    async processTransaction(transactionID, senderID, receiverID, amount) {
+    async processTransaction(transactionID, senderID, receiverID, amount, code?) {
         let state = "pending";
-        
+        let stateReason:string;
+        if(!code){
+        code = 101;
+        }
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount) {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
-            const receiverAmount = await this.userService.addMoney(senderID, amount);
-            const senderAmount = await this.userService.removeMoney(receiverID, amount);
+            const receiverAmount = await this.userService.addMoney(receiverID, amount);
+            const senderAmount = await this.userService.removeMoney(senderID, amount);
             state = "success";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, state);
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
             return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
-            state = "error";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, state);
-            return {status: STATUS_CODES.BAD_REQUEST, message: "Sender hat nicht genug Geld"};
+            state = "aborted";
+            stateReason = "Insufficient funds";
+            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason);
+            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
         }
         
 
         
     }
 
-    async storeTransaction(transactionID, senderID, receiverID, amount, state) {
-        //speichere Transaktion in Datenbank
+    async storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason?) {
+        const transaction = new Transactions();
+        transaction.receiverID = receiverID;
+        transaction.senderID = senderID;
+        transaction.amount = amount;
+        transaction.transactionID = transactionID;
+        transaction.code = code;
+        transaction.status = state;
+        transaction.statusReason = stateReason;
+        transaction.transactionTime = new Date();
+        await this.transactionRepository.save(transaction);
     }
 }
