@@ -65,4 +65,28 @@ export class CompanyService {
         }
         return result;
     }
+
+    async removeMoney(chipID, amount){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.chipID = :chipID", { chipID: chipID })
+        .getOne();
+        let oldAmount = company.balance;
+        let newAmount = oldAmount - amount;
+        company.balance = newAmount;
+        await this.companyRepository.save(company);
+        return newAmount;
+    }
+
+    async addMoney(chipID, amount){
+        const company = await this.companyRepository
+        .createQueryBuilder("company")
+        .where("company.chipID = :chipID", { chipID: chipID })
+        .getOne();
+        let oldAmount = company.balance;
+        let newAmount = oldAmount + amount;
+        company.balance = newAmount;
+        await this.companyRepository.save(company);
+        return newAmount;
+    }
 }
