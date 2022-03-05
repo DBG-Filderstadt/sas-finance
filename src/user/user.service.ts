@@ -20,6 +20,15 @@ export class UserService {
         return amount;
     }
 
+    async getAll() {
+        const users =  await this.usersRepository
+        .createQueryBuilder("user")
+        .getMany();
+
+        return users;
+
+    }
+
     async removeMoney(chipID, amount){
         const user = await this.usersRepository
         .createQueryBuilder("user")

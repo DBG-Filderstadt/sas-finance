@@ -11,6 +11,7 @@ import { TransactionService } from './transaction.service';
     imports: [TypeOrmModule.forFeature([Transactions]), UserModule, TerminalJobModule, CompanyModule],
     controllers: [TransactionController],
     providers: [TransactionService],
+    exports: [TransactionService]
 })
 export class TransactionModule {}
 
