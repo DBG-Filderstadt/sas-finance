@@ -136,34 +136,20 @@
                 </tr>
               </thead>
               <tbody>
-                
-                    <% for(var i=0; i<users.length; i++) { %>
-                     <tr>
-                        <td><%= users[i].id%></td>
-                        <td><%= users[i].fname%> <%= users[i].lname%></td>
-                        <td><%= users[i].class%></td>
-                        <td><%= users[i].chipID%></td>
-                        <td><%= users[i].balance%></td>
-                        <td><%= users[i].company%></td>
-                        <td><%= users[i].role%></td>
-                        <td><%= users[i].isLocked%></td>
-                        <td><button type="button" id="lock" class="btn btn-danger" onclick="">Lock User</button></td>
-                        <td><button type="button" class="btn btn-success" onclick="unlockUser()">Unlock User</button></td>
-                    </tr> 
-                    <% 
-                    async function unlockUser() {
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", localhost:3000/user/lock, true);
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.send(JSON.stringify({
-                            locked: true,
-                            userID: users[i].chipID
-                        }));
-                } %>
-
-                    
-                
-                
+                <% for(var i=0; i<users.length; i++) { %>
+                  <tr>
+                     <td><%= users[i].id%></td>
+                     <td><%= users[i].fname%> <%= users[i].lname%></td>
+                     <td><%= users[i].class%></td>
+                     <td><%= users[i].chipID%></td>
+                     <td><%= users[i].balance%></td>
+                     <td><%= users[i].company%></td>
+                     <td><%= users[i].role%></td>
+                     <td><%= users[i].isLocked%></td>
+                     <td><button type="button" id="lock" class="btn btn-danger" onclick="">Lock User</button></td>
+                     <td><button type="button" class="btn btn-success" onclick="">Unlock User</button></td>
+                 </tr>        
+            <% } %>
               </tbody>
             </table>
           </div>
