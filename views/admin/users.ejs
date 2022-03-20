@@ -148,19 +148,9 @@
                         <td><%= users[i].role%></td>
                         <td><%= users[i].isLocked%></td>
                         <td><button type="button" id="lock" class="btn btn-danger" onclick="">Lock User</button></td>
-                        <td><button type="button" class="btn btn-success" onclick="unlockUser()">Unlock User</button></td>
+                        <td><button type="button" class="btn btn-success" onclick="">Unlock User</button></td>
                     </tr> 
-                    <% 
-                    async function unlockUser() {
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", localhost:3000/user/lock, true);
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.send(JSON.stringify({
-                            locked: true,
-                            userID: users[i].chipID
-                        }));
-                } %>
-
+                    
                     
                 
                 

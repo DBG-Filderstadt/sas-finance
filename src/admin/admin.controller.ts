@@ -20,8 +20,14 @@ export class AdminController {
     @Render('admin/users')
     async users(){
         const users = await this.userService.getAll();
-        return { users: users};
-        } 
+        return { users: users,
+        options: {
+            async: true,
+        }
+    };
+        
+       
+    }
     
     @Get('/companys')
     @Render('admin/companys')
