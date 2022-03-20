@@ -62,7 +62,7 @@ export class UserService {
         
         return user;
         }else {
-            throw new NotFoundException('Benutzer nicht gefunden');
+            throw new NotFoundException('Benutzer nicht gefunden, bitte prüfen Sie die ChipID');
         }
     }
 

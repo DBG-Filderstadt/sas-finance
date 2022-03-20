@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>SaS - Transaktionen</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/dashboard/">
 
@@ -20,7 +20,7 @@
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Schule als Staat</a>
       <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -111,9 +111,9 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2">Transaktionen</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
-              
-              <button type="button" class="btn btn-success" onclick="">Neue Transaktion</button>
-              
+            
+                <a href="transactions/revoke"><button type="button" class="btn btn-danger" onclick="">Transaktion umkehren</button></a>
+            <a href="transactions/new"><button type="button" class="btn btn-success">Neue Transaktion</button></a>
             </div>
           </div>
 
@@ -126,15 +126,16 @@
               <thead>
                 <tr>
                   <th>id</th>
-                  <th>Empfänger ID</th>
-                  <th>Sender ID</th>
+                  <th>Empfänger</th>
+                  <th>Sender</th>
                   <th>Betrag</th>
                   <th>Transaction Code</th>
                   <th>Transaction ID</th>
                   <th>Status</th>
                   <th>Grund für Status</th>
                   <th>Verwendungszweck</th>
-                  <th>Transactionszeitpunkt</th>
+                  <th>Transaktionszeitpunkt (in UTC)</th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -142,8 +143,8 @@
                 <% for(var i=0; i<transactions.length; i++) { %>
                   <tr>
                      <td><%= transactions[i].id%></td>
-                     <td><%= transactions[i].receiverID%>
-                     <td><%= transactions[i].senderID%></td>
+                     <td><%= transactions[i].receiverName%> (<%= transactions[i].receiverID%>)</td>
+                     <td><%=transactions[i].senderName%> (<%= transactions[i].senderID%>)</td>
                      <td><%= transactions[i].amount%></td>
                      <td><%= transactions[i].code%></td>
                      <td><%= transactions[i].transactionID%></td>
@@ -151,6 +152,7 @@
                      <td><%= transactions[i].statusReason%></td>
                      <td><%= transactions[i].purpose%></td>
                      <td><%= transactions[i].transactionTime%></td>
+                     
                  </tr>        
             <% } %>
               </tbody>
