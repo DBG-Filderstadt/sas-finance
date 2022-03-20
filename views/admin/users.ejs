@@ -37,35 +37,35 @@
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
+                  Dashboard 
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="admin/users">
+                <a class="nav-link" href="users">
                   <span data-feather="users"></span>
-                  Users
+                  Users<span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="admin/companys">
+                <a class="nav-link" href="companys">
                   <span data-feather="users"></span>
                   Companys
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="admin/transactions">
+                <a class="nav-link" href="transactions">
                   <span data-feather="shopping-cart"></span>
                   Transactions
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="admin/adminlog">
+                <a class="nav-link" href="adminlog">
                   <span data-feather="bar-chart-2"></span>
                   Admin Log
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="admin/terminals">
+                <a class="nav-link" href="terminals">
                   <span data-feather="layers"></span>
                   Terminals
                 </a>
@@ -111,10 +111,13 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2">Users</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
-             
+              
+              <button type="button" class="btn btn-danger" onclick="dialog()">Lock User</button>
+              <button type="button" class="btn btn-success" onclick="">Unlock User</button>
               
             </div>
           </div>
+
 
          
 
@@ -131,8 +134,6 @@
                   <th>Company</th>
                   <th>Rolle</th>
                   <th>Gesperrt</th>
-                  <th>Lock User</th>
-                  <th>Unlock User</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,8 +148,6 @@
                      <td><%= users[i].company%></td>
                      <td><%= users[i].role%></td>
                      <td><%= users[i].isLocked%></td>
-                     <td><button type="button" id="lock" class="btn btn-danger" onclick="">Lock User</button></td>
-                     <td><button type="button" class="btn btn-success" onclick="">Unlock User</button></td>
                  </tr>        
             <% } %>
               </tbody>
@@ -157,6 +156,12 @@
         </main>
       </div>
     </div>
+
+    <script>
+      function dialog() {
+        window.prompt("Please enter the userIUD:", "userID")
+      }
+    </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

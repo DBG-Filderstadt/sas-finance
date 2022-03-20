@@ -1,4 +1,4 @@
-import { ConsoleLogger, Controller, Get, Render } from '@nestjs/common';
+import { Body, ConsoleLogger, Controller, Get, Render, Req } from '@nestjs/common';
 import { AdminLogService } from 'src/admin-log/admin-log.service';
 import { CompanyService } from 'src/company/company.service';
 import { TerminalJobModule } from 'src/terminal-job/terminal-job.module';
@@ -18,10 +18,8 @@ export class AdminController {
 
     @Get('/users')
     @Render('admin/users')
-    async users(){
+    async users( ){
         const users = await this.userService.getAll();
-
-        console.log(users);
         return{ users: users};
         } 
 
@@ -34,7 +32,10 @@ export class AdminController {
 
     @Get('/transactions')
     @Render('admin/transactions')
-    transaction(){
-        return {};
+    async transaction(){
+        const transactions = await this.transactionService.getallTransactions();
+        return {
+            transactions: transactions
+        };
     }
 }
