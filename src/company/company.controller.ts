@@ -8,9 +8,8 @@ export class CompanyController {
     //Fetch all Companys from Database
     @Get('/')
     async getAllCompanys(
-        @Body('actorID') actorID: string,
     ) {
-        return await this.companyService.getAllCompanys(actorID);
+        return await this.companyService.getAllCompanys();
     }
 
     //Create Company in Database

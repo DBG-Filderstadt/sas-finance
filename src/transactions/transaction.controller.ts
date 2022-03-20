@@ -16,6 +16,16 @@ export class TransactionController{
         return await this.transactionService.createTransaction(terminalID, receiverID, amount, transactionID);
     }
 
+    @Get('/get')
+    async getTransaction() {
+        return await this.transactionService.getallTransactions();
+    }
+
+    @Get('/getbyTransactionID/:transactionID')
+    async getTransactionByTransactionID(@Param('transactionID') transactionID: string) {    
+        return await this.transactionService.getTransactionbyTransactionID(transactionID);
+    }
+
     //Terminal fragt nach neuem Job
     //@Param terminalID
     @Get('/get/:terminalID')

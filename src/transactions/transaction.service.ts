@@ -30,6 +30,24 @@ export class TransactionService {
         }
     }
 
+    async getTransactionbyTransactionID(transactionID) {
+        const transaction = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .where("transaction.transactionID = :transactionID", { transactionID: transactionID })
+        .getOne();
+        return transaction;
+    }
+    
+
+
+    async getallTransactions() {
+        const transactions = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .getMany();
+        return transactions;
+    }
+
+
     //Führt die sender und receiver id zusammen und leitet die Transaktion ein
     async processTransaction(transactionID, senderID, receiverID, amount, code?) {
         let state = "pending";
