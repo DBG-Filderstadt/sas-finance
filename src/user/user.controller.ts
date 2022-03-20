@@ -10,7 +10,9 @@ export class UserController {
         @Body('userID') userID: string,
         @Body('locked') lock: boolean,
     ) {
+        console.log("hi")
         return await this.userService.lockUser(userID, lock);
     }
+
     
 }
