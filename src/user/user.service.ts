@@ -11,6 +11,26 @@ export class UserService {
         this.usersRepository = connection.getRepository(User);
     }
 
+    async updateUser(chipID, cls, balance, role, company, name){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            user.class = cls;
+            user.balance = balance;
+            user.role = role;
+            user.company = company;
+            user.name = name;
+            await this.usersRepository.save(user);
+            return user;
+
+        }else {
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
+    }
+
+
     async getUserBalance(chipID){
         const user = await this.usersRepository
         .createQueryBuilder("user")
@@ -20,13 +40,35 @@ export class UserService {
         return amount;
     }
 
+    async getAll() {
+        const users =  await this.usersRepository
+        .createQueryBuilder("user")
+        .getMany();
+
+        return users;
+
+    }
+
+    async search(param) {
+        let input = `${param}%`
+        const users = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.name LIKE :input", { input })
+        .orWhere("user.chipID LIKE :input", { input })
+        .orWhere("user.class LIKE :input", { input })
+        .orWhere("user.company LIKE :input", { input })
+        .orWhere("user.role LIKE :input", { input })
+        .getMany();
+        return users;
+    }
+
     async removeMoney(chipID, amount){
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = user.balance;
-        let newAmount = oldAmount - amount;
+        let newAmount = oldAmount - parseInt(amount);
         user.balance = newAmount;
         await this.usersRepository.save(user);
         return newAmount;
@@ -38,22 +80,22 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = user.balance;
-        let newAmount = oldAmount + amount;
+        let newAmount = oldAmount + parseInt(amount);
         user.balance = newAmount;
         await this.usersRepository.save(user);
         return newAmount;
     }
 
     async getUser(chipID): Promise<User>{
+        console.log(chipID)
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         if(user){
-        
         return user;
         }else {
-            throw new NotFoundException('Benutzer nicht gefunden');
+            throw new NotFoundException('[UserService]:getUser Benutzer nicht gefunden, bitte prüfen Sie die ChipID');
         }
     }
 
@@ -125,22 +167,29 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID })
         .getOne();
         if(user){
-            if(locked == true && user.isLocked == false){
-                user.isLocked = locked;
+            if(locked == "true" && user.isLocked == false){
+                user.isLocked = true;
                 await this.usersRepository.save(user);
-                return "Benutzer "+user.fname + " " + user.lname + " wurde gesperrt.";
-            }else if(locked == true && user.isLocked == true){
-                return "Benutzer "+user.fname + " " + user.lname + " ist bereits gesperrt.";
+                return "Benutzer "+user.name + " wurde gesperrt.";
+            }else if(locked == "true" && user.isLocked == true){
+                return "Benutzer "+user.name + " ist bereits gesperrt.";
             }
-            if(locked == false && user.isLocked == true){
-                user.isLocked = locked;
+            if(locked == "false" && user.isLocked == true){
+                user.isLocked = false;
                 await this.usersRepository.save(user);
-                return "Benutzer "+user.fname + " " + user.lname + " wurde entsperrt.";;
+                return "Benutzer "+user.name + " wurde entsperrt.";;
             }else {
-                return "Benutzer "+user.fname + " " + user.lname + " ist bereits entsperrt.";
+                return "Benutzer "+user.name + " ist bereits entsperrt.";
             }
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');
         }
+    }
+
+    async getAllUsers(){
+        const users = await this.usersRepository
+        .createQueryBuilder("user")
+        .getMany();
+        return users;
     }
 }

@@ -30,13 +30,31 @@ export class TransactionService {
         }
     }
 
+    async getTransactionbyTransactionID(transactionID) {
+        const transaction = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .where("transaction.transactionID = :transactionID", { transactionID: transactionID })
+        .getOne();
+        return transaction;
+    }
+    
+
+
+    async getallTransactions() {
+        const transactions = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .cache(10000)
+        .getMany();
+        return transactions;
+    }
+
+
     //Führt die sender und receiver id zusammen und leitet die Transaktion ein
-    async processTransaction(transactionID, senderID, receiverID, amount, code?) {
+    async processTransaction(transactionID, senderID, receiverID, amount, code, purpose?) {
         let state = "pending";
         let stateReason:string;
         //User -> company
-        if(!code){
-        code = 101;
+        if(code === "101"){
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount) {
             //wenn ja speichere Transaktion in transactionHistory Datenbank
@@ -44,18 +62,18 @@ export class TransactionService {
             const receiverAmount = await this.companyService.addMoney(receiverID, amount);
             const senderAmount = await this.userService.removeMoney(senderID, amount);
             state = "success";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, null, purpose);
             return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
             state = "aborted";
             stateReason = "Insufficient funds";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason);
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason, purpose);
             throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
             }
         }
         //User -> User
-        if(code == 202)  {
+        if(code === "202")  {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount || senderBalance === amount) {
@@ -64,18 +82,18 @@ export class TransactionService {
             const receiverAmount = await this.userService.addMoney(receiverID, amount);
             const senderAmount = await this.userService.removeMoney(senderID, amount);
             state = "success";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, null, purpose);
             return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
             state = "aborted";
             stateReason = "Insufficient funds";
-            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason);
+            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason, purpose);
             throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
         }
     }
     //Company -> User
-    if(code === 303) {
+    if(code === "303") {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.companyService.getBalance(senderID);
         if (senderBalance > amount) {
@@ -84,13 +102,13 @@ export class TransactionService {
             const receiverAmount = await this.userService.addMoney(receiverID, amount);
             const senderAmount = await this.companyService.removeMoney(senderID, amount);
             state = "success";
-            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state);
+            this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, null, purpose);
             return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
             state = "aborted";
             stateReason = "Insufficient funds";
-            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason);
+            this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason, purpose);
             throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
         }
     }
@@ -98,7 +116,7 @@ export class TransactionService {
         
     }
 
-    async revokeTransaction(transactionID) {
+    async revokeTransaction(transactionID, revokeReason?) {
         const transaction = await this.transactionRepository
         .createQueryBuilder("transaction")
         .where("transaction.transactionID = :transactionID", { transactionID: transactionID })
@@ -107,6 +125,7 @@ export class TransactionService {
             throw new UnauthorizedException("Die Transaktion wurde bereits abgebrochen");
         }
         transaction.status = "revoked";
+        transaction.statusReason = revokeReason;
         const receiverID = transaction.receiverID;
         const senderID = transaction.senderID;
         const amount = transaction.amount;
@@ -126,7 +145,7 @@ export class TransactionService {
         await this.transactionRepository.save(transaction);
         return transaction;
     }
-    async storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason?) {
+    async storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason?, purpose?) {
         const transaction = new Transactions();
         transaction.receiverID = receiverID;
         transaction.senderID = senderID;
@@ -135,7 +154,8 @@ export class TransactionService {
         transaction.code = code;
         transaction.status = state;
         transaction.statusReason = stateReason;
-        transaction.transactionTime = new Date();
+        transaction.purpose = purpose;
+        transaction.transactionTime = new Date().toISOString();
         await this.transactionRepository.save(transaction);
     }
 }

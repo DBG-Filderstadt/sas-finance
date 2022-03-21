@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+  <%- include('partials/header.ejs') %>
+
+  <body>
+   
+
+    <%- include('partials/navbar.ejs') %>
+
+    <%- include('partials/sideboard.ejs') %>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Transaktionen</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+            
+                
+            <a href="/admin/transactions/new/1"><button type="button" class="btn btn-success">Neue Transaktion</button></a>
+            </div>
+          </div>
+
+
+         
+
+          <h2>Alle Transaktionen</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>Empfänger</th>
+                  <th>Sender</th>
+                  <th>Betrag</th>
+                  <th>Transaction Code</th>
+                  <th>Transaction ID</th>
+                  <th>Status</th>
+                  <th>Grund für Status</th>
+                  <th>Verwendungszweck</th>
+                  <th>Transaktionszeitpunkt (in UTC)</th>
+                  <th>Umkehren</th>
+                  <th>Replizieren</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+
+                <% for(var i=0; i<transactions.length; i++) { %>
+                  <tr>
+                     <td><%= transactions[i].id%></td>
+                     <td><a style=" text-decoration: none; color: green;" href="/admin/user/<%=transactions[i].receiverID%>"><%= transactions[i].receiverName%> (<%= transactions[i].receiverID%>)</a></td>
+                     <td><a style=" text-decoration: none; color: red;" href="/admin/user/<%=transactions[i].senderID%>"><%=transactions[i].senderName%> (<%= transactions[i].senderID%>)</a></td>
+                     <td style="color: seagreen; font-weight: bold"><%= transactions[i].amount%>€</td>
+                     <td><%= transactions[i].code%></td>
+                     <td><%= transactions[i].transactionID%></td>
+                     <td><%= transactions[i].status%></td>
+                     <td><%= transactions[i].statusReason%></td>
+                     <td><%= transactions[i].purpose%></td>
+                     <td><%= transactions[i].transactionTime%></td>
+                     <td><a href="/admin/transactions/revoke/<%-transactions[i].transactionID %>"><button type="button" class="btn btn-danger" onclick="">Transaktion umkehren</button></a></td>
+                     <td><a href="/admin/transactions/new/<%-transactions[i].transactionID %>"><button type="button" class="btn btn-success" onclick="">Replizieren</button></a></td>
+                     
+                 </tr>        
+            <% } %>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      function dialog() {
+        window.prompt("Please enter the userIUD:", "userID")
+      }
+    </script>
+    
+  <%- include('partials/bottom.ejs') %>
+
+  </body>
+</html>

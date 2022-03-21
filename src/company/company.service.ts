@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { STATUS_CODES } from 'http';
 import { AdminLogService } from 'src/admin-log/admin-log.service';
 import { UserService } from 'src/user/user.service';
@@ -9,7 +9,11 @@ import { Company } from './company.entity';
 export class CompanyService {
     companyRepository: Repository<Company>;
 
-    constructor(private connection: Connection, private readonly userService: UserService, ) { //private readonly adminLogService: AdminLogService
+    constructor(
+        @Inject(forwardRef(() => AdminLogService))  
+        private adminLogService: AdminLogService,
+        private connection: Connection, 
+        private readonly userService: UserService, ) { 
         this.companyRepository = connection.getRepository(Company);
     }
 
@@ -18,8 +22,8 @@ export class CompanyService {
     */
 
     //Fetch all Companys from Database
-    async getAllCompanys(actorID) {
-        //await this.adminLogService.log(actorID, '', 'Datenabfrage', 'API GET (/company) | Alle Coampanys abgerufen', 'OK')
+    async getAllCompanys() {
+        //await this.adminLogService.log('', '', 'Datenabfrage', 'API GET (/company) | Alle Coampanys abgerufen', 'OK')
         const companys = await this.companyRepository
         .createQueryBuilder("company")
         .getMany();
@@ -173,7 +177,7 @@ export class CompanyService {
         .where("company.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = company.balance;
-        let newAmount = oldAmount - amount;
+        let newAmount = oldAmount - parseInt(amount);
         company.balance = newAmount;
         await this.companyRepository.save(company);
         return newAmount;
@@ -186,7 +190,7 @@ export class CompanyService {
         .where("company.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = company.balance;
-        let newAmount = oldAmount + amount;
+        let newAmount = oldAmount + parseInt(amount);
         company.balance = newAmount;
         await this.companyRepository.save(company);
         return newAmount;

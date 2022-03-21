@@ -10,10 +10,7 @@ export class User {
   chipID: string;
 
   @Column()
-  fname: string;
-
-  @Column()
-  lname: string;
+  name: string;
 
   @Column()
   class: string;

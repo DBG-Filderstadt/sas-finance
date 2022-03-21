@@ -1,3 +1,4 @@
+import { User } from "src/user/user.entity";
 import { Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
@@ -30,6 +31,13 @@ export class Transactions {
     purpose: string;
 
     @Column()
-    transactionTime: Date;
+    transactionTime: string;
+
+    @Column()
+    senderName: string;
+
+    @Column()
+    receiverName: string;
+
 
 }
