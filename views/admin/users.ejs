@@ -22,7 +22,7 @@
           </div>
          
 
-          <h2>Alle Benutzer</h2>
+          
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
@@ -148,7 +148,11 @@
           let temp = this.response.replaceAll(input, "<span style=' text-decoration: none; color: green; font-weight: bold;'>" + input + "</span>");
           let output = JSON.parse(temp);
           for(var i=0; i<output.length; i++) {
-            tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
+            if (output[i].isLocked == true) {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
+            } else {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
+            }
           } 
         }
       }

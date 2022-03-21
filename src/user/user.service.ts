@@ -87,7 +87,6 @@ export class UserService {
     }
 
     async getUser(chipID): Promise<User>{
-        console.log(chipID)
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID: chipID })
