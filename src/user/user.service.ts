@@ -167,15 +167,15 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID })
         .getOne();
         if(user){
-            if(locked == true && user.isLocked == false){
-                user.isLocked = locked;
+            if(locked == "true" && user.isLocked == false){
+                user.isLocked = true;
                 await this.usersRepository.save(user);
                 return "Benutzer "+user.name + " wurde gesperrt.";
-            }else if(locked == true && user.isLocked == true){
+            }else if(locked == "true" && user.isLocked == true){
                 return "Benutzer "+user.name + " ist bereits gesperrt.";
             }
-            if(locked == false && user.isLocked == true){
-                user.isLocked = locked;
+            if(locked == "false" && user.isLocked == true){
+                user.isLocked = false;
                 await this.usersRepository.save(user);
                 return "Benutzer "+user.name + " wurde entsperrt.";;
             }else {
@@ -184,5 +184,12 @@ export class UserService {
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');
         }
+    }
+
+    async getAllUsers(){
+        const users = await this.usersRepository
+        .createQueryBuilder("user")
+        .getMany();
+        return users;
     }
 }

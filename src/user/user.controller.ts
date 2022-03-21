@@ -5,12 +5,16 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Post('lock')
+    @Get('/')
+    async getAll() {
+        return await this.userService.getAllUsers();
+    }
+
+    @Post(':userID/lock/:locked')
     async lockUser(
-        @Body('userID') userID: string,
-        @Body('locked') lock: boolean,
+        @Param('userID') userID: string,
+        @Param('locked') lock: boolean,
     ) {
-        console.log("hi")
         return await this.userService.lockUser(userID, lock);
     }
 

@@ -14,11 +14,12 @@
             <div class="btn-toolbar mb-2 mb-md-0">
 
               <input type="text" class="form-control" id="searchuser" oninput="searchuser();" placeholder="User suchen" aria-label="User suchen">
+
+
+
               
             </div>
           </div>
-
-
          
 
           <h2>Alle Benutzer</h2>
@@ -34,12 +35,14 @@
                   <th>Company</th>
                   <th>Rolle</th>
                   <th>Gesperrt</th>
+                  <th>Sperren</th>
                 </tr>
               </thead>
               <tbody id="test">
 
                 <% for(var i=0; i<users.length; i++) { %>
                   <tr>
+<<<<<<< Updated upstream
                      <td><%= users[i].id%></td>
                      <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
                      <td><%= users[i].class%></td>
@@ -48,18 +51,95 @@
                      <td><%= users[i].company%></td>
                      <td><%= users[i].role%></td>
                      <td><%= users[i].isLocked%></td>
+=======
+                    <td><%= users[i].id%></td>
+                    <td><%= users[i].name%></td>
+                    <td><%= users[i].class%></td>
+                    <td><%= users[i].chipID%></td>
+                    <td><%= users[i].balance%></td>
+                    <td><%= users[i].company%></td>
+                    <td><%= users[i].role%></td>
+                    <td><%= users[i].isLocked%></td>
+                    <% if(users[i].isLocked == false){ %>
+                      <td><button type="button" class="btn btn-danger" onclick="lockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Sperren</button></td>
+                    <% } else{ %>  
+                      <td><button type="button" class="btn btn-success" onclick="unlockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Entsperren</button></td>
+                   <% } %>
+>>>>>>> Stashed changes
                  </tr>        
                 <% } %>
               </tbody>
             </table>
           </div>
+
+          <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 0">
+            <div id="liveToast" class="toast" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <strong class="me-auto" id="toasttitle">SaS - Admin Dashboard</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                <p id="toastbody"></p>
+              <div class="mt-2 pt-2 border-top" id="btndiv">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+
         </main>
       </div>
     </div>
 
     <script>
-      function dialog() {
-        window.prompt("Please enter the userIUD:", "userID")
+      
+
+      function unlockUser(chipID, name){
+        var toastLiveExample = document.getElementById('liveToast')
+        var toasttitle = document.getElementById('toasttitle')
+        var toastbody = document.getElementById('toastbody')
+        var btndiv = document.getElementById('btndiv')
+        toasttitle.innerHTML = "Benutzer entsperren"
+        toastbody.innerHTML = "Soll der Benutzer " + name + " wirklich gentsperrt werden?"
+        btndiv.innerHTML = '<button type="button" class="btn btn-success btn-sm" onclick="confirmunLockUser('+chipID+')">Entsperren</button>'
+
+        var toast = new bootstrap.Toast(toastLiveExample)
+
+        toast.show()
+      }
+      function confirmunLockUser(chipID) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "../user/"+chipID+"/lock/false", true);
+        xhttp.send();
+
+        xhttp.onload = function() {
+          //console.log(this.responseText)
+          window.location.reload();
+        }
+      }
+
+      function lockUser(chipID, name){
+        var toastLiveExample = document.getElementById('liveToast')
+        var toasttitle = document.getElementById('toasttitle')
+        var toastbody = document.getElementById('toastbody')
+        var btndiv = document.getElementById('btndiv')
+        toasttitle.innerHTML = "Benutzer sperren"
+        toastbody.innerHTML = "Soll der Benutzer " + name + " wirklich gesperrt werden?"
+        btndiv.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="confirmLockUser('+chipID+')">Sperren</button>'
+
+        var toast = new bootstrap.Toast(toastLiveExample)
+
+        toast.show()
+      }
+      function confirmLockUser(chipID) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "../user/"+chipID+"/lock/true", true);
+        xhttp.send();
+
+        xhttp.onload = function() {
+          //console.log(this.responseText)
+          window.location.reload();
+        }
       }
 
       function searchuser() {
@@ -67,6 +147,7 @@
         var tbody = document.getElementById("test");
 
         if (input == "") {
+          window.location.reload();
           return;
         }
         const xhttp = new XMLHttpRequest();
@@ -75,13 +156,15 @@
         
         xhttp.onload = function () {
           tbody.innerHTML = ''
-          let output = JSON.parse(this.response);
+          let temp = this.response.replaceAll(input, "<span style=' text-decoration: none; color: green; font-weight: bold;'>" + input + "</span>");
+          let output = JSON.parse(temp);
           for(var i=0; i<output.length; i++) {
             tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
           } 
         }
       }
       function load() {
+        var tbody = document.getElementById("test");
         document.getElementById("searchuser").value = "";
         document.getElementById("searchuser").focus();
       }
