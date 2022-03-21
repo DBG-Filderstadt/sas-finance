@@ -42,18 +42,8 @@
 
                 <% for(var i=0; i<users.length; i++) { %>
                   <tr>
-<<<<<<< Updated upstream
-                     <td><%= users[i].id%></td>
-                     <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
-                     <td><%= users[i].class%></td>
-                     <td><%= users[i].chipID%></td>
-                     <td><%= users[i].balance%></td>
-                     <td><%= users[i].company%></td>
-                     <td><%= users[i].role%></td>
-                     <td><%= users[i].isLocked%></td>
-=======
                     <td><%= users[i].id%></td>
-                    <td><%= users[i].name%></td>
+                    <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
                     <td><%= users[i].class%></td>
                     <td><%= users[i].chipID%></td>
                     <td><%= users[i].balance%></td>
@@ -65,7 +55,6 @@
                     <% } else{ %>  
                       <td><button type="button" class="btn btn-success" onclick="unlockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Entsperren</button></td>
                    <% } %>
->>>>>>> Stashed changes
                  </tr>        
                 <% } %>
               </tbody>
