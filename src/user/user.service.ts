@@ -11,6 +11,26 @@ export class UserService {
         this.usersRepository = connection.getRepository(User);
     }
 
+    async updateUser(chipID, cls, balance, role, company, name){
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            user.class = cls;
+            user.balance = balance;
+            user.role = role;
+            user.company = company;
+            user.name = name;
+            await this.usersRepository.save(user);
+            return user;
+
+        }else {
+            throw new NotFoundException('Benutzer nicht gefunden');
+        }
+    }
+
+
     async getUserBalance(chipID){
         const user = await this.usersRepository
         .createQueryBuilder("user")
@@ -67,12 +87,12 @@ export class UserService {
     }
 
     async getUser(chipID): Promise<User>{
+        console.log(chipID)
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         if(user){
-        
         return user;
         }else {
             throw new NotFoundException('[UserService]:getUser Benutzer nicht gefunden, bitte prüfen Sie die ChipID');

@@ -4,6 +4,8 @@
   <%- include('partials/header.ejs') %>
 
   <body>
+   
+
     <%- include('partials/navbar.ejs') %>
 
     <%- include('partials/sideboard.ejs') %>
@@ -46,8 +48,8 @@
                 <% for(var i=0; i<transactions.length; i++) { %>
                   <tr>
                      <td><%= transactions[i].id%></td>
-                     <td><a style=" text-decoration: none; color: green;" href="/admin/users/<%=transactions[i].receiverID%>"><%= transactions[i].receiverName%> (<%= transactions[i].receiverID%>)</a></td>
-                     <td><a style=" text-decoration: none; color: red;" href="/admin/users/<%=transactions[i].senderID%>"><%=transactions[i].senderName%> (<%= transactions[i].senderID%>)</a></td>
+                     <td><a style=" text-decoration: none; color: green;" href="/admin/user/<%=transactions[i].receiverID%>"><%= transactions[i].receiverName%> (<%= transactions[i].receiverID%>)</a></td>
+                     <td><a style=" text-decoration: none; color: red;" href="/admin/user/<%=transactions[i].senderID%>"><%=transactions[i].senderName%> (<%= transactions[i].senderID%>)</a></td>
                      <td style="color: seagreen; font-weight: bold"><%= transactions[i].amount%>€</td>
                      <td><%= transactions[i].code%></td>
                      <td><%= transactions[i].transactionID%></td>
@@ -74,6 +76,6 @@
     </script>
     
   <%- include('partials/bottom.ejs') %>
-    
+
   </body>
 </html>

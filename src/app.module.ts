@@ -19,6 +19,7 @@ import { TerminalLinksModule } from './terminal-links/terminal-links.module';
       username: "sasdbg",
       password: "SAS-DB3-NEST",
       database: "sas",
+      cache: true,
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
       autoLoadEntities: true,

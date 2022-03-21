@@ -43,6 +43,7 @@ export class TransactionService {
     async getallTransactions() {
         const transactions = await this.transactionRepository
         .createQueryBuilder("transaction")
+        .cache(10000)
         .getMany();
         return transactions;
     }

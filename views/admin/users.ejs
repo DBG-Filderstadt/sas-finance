@@ -41,7 +41,7 @@
                 <% for(var i=0; i<users.length; i++) { %>
                   <tr>
                      <td><%= users[i].id%></td>
-                     <td><%= users[i].name%></td>
+                     <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
                      <td><%= users[i].class%></td>
                      <td><%= users[i].chipID%></td>
                      <td><%= users[i].balance%></td>

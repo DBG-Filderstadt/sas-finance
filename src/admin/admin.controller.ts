@@ -6,11 +6,13 @@ import { TerminalJobService } from 'src/terminal-job/terminal-job.service';
 import { TerminalLinksService } from 'src/terminal-links/terminal-links.service';
 import { Transactions } from 'src/transactions/transaction.entity';
 import { TransactionService } from 'src/transactions/transaction.service';
+import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 
 @Controller('admin')
 export class AdminController {
-    constructor(private readonly userService: UserService, private readonly companyService: CompanyService, private readonly transactionService: TransactionService, private readonly adminLogService: AdminLogService, private readonly tJobService: TerminalJobService, private readonly tLinkService: TerminalLinksService){}
+    constructor(private readonly userService: UserService, private readonly companyService: CompanyService, private readonly transactionService: TransactionService, private readonly adminLogService: AdminLogService, private readonly tJobService: TerminalJobService, private readonly tLinkService: TerminalLinksService){
+    }
     @Get()
     @Render('admin/index')
     root(){
@@ -23,6 +25,23 @@ export class AdminController {
         const users = await this.userService.getAll();
         return{ users: users};
         } 
+
+    @Get('/user/:id')
+    @Render('admin/userprofile.ejs')
+    async user(@Param('id') id: string){
+        console.log(id)
+        const user = await this.userService.getUser(id);
+        return{ user: user};
+        } 
+
+    @Post('/user/:id')
+    @Redirect('/admin/users')
+    async updateUser(@Body() body, @Param('id') id: string){
+        const user = await this.userService.updateUser(id, body.class, body.balance, body.role, body.company, body.name);
+        
+    }
+
+
     @Get('/transactions')
     @Render('admin/transactions')
         async transaction(){
