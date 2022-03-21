@@ -44,7 +44,7 @@ export class AdminController {
                 sender = await this.companyService.getCompany(transaction.senderID);
                 receiver = await this.companyService.getCompany(transaction.receiverID);
            }
-                console.log(sender)
+               
                 var sName = JSON.stringify(sender.name);
                 var rName = JSON.stringify(receiver.name);
                 transaction.senderName = sName.replace(/\"/g, "");
@@ -100,6 +100,12 @@ export class AdminController {
         const transactionID = Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6);
 
         await this.transactionService.processTransaction(transactionID, body.sender, body.receiver, body.amount, body.code, body.purpose);
+    }
+
+    @Get('test')
+    @Render('admin/test.ejs')
+    async test(){
+        return{};
     }
 
     

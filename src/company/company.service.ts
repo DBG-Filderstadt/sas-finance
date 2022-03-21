@@ -177,7 +177,7 @@ export class CompanyService {
         .where("company.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = company.balance;
-        let newAmount = oldAmount - amount;
+        let newAmount = oldAmount - parseInt(amount);
         company.balance = newAmount;
         await this.companyRepository.save(company);
         return newAmount;
@@ -190,7 +190,7 @@ export class CompanyService {
         .where("company.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = company.balance;
-        let newAmount = oldAmount + amount;
+        let newAmount = oldAmount + parseInt(amount);
         company.balance = newAmount;
         await this.companyRepository.save(company);
         return newAmount;

@@ -35,7 +35,7 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = user.balance;
-        let newAmount = oldAmount - amount;
+        let newAmount = oldAmount - parseInt(amount);
         user.balance = newAmount;
         await this.usersRepository.save(user);
         return newAmount;
@@ -47,7 +47,7 @@ export class UserService {
         .where("user.chipID = :chipID", { chipID: chipID })
         .getOne();
         let oldAmount = user.balance;
-        let newAmount = oldAmount + amount;
+        let newAmount = oldAmount + parseInt(amount);
         user.balance = newAmount;
         await this.usersRepository.save(user);
         return newAmount;
