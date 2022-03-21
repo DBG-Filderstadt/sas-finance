@@ -537,7 +537,7 @@
                     <h2 class="title">Transaktion Umkehren</h2>
                     <form method="POST">
                         <div class="input-group">
-                            <input class="input--style-2" type="text" placeholder="Transaktions ID" name="transID">
+                            <input class="input--style-2" type="text" placeholder="Transaktions ID" <% if(id != 1) { %> value="<%- id %>" <% } %> name="transID">
                         </div>
                         <div class="input-group">
                             <input class="input--style-2" type="text" placeholder="Grund(optional)" name="reason">

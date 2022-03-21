@@ -537,30 +537,34 @@
                     <h2 class="title">Neue Admin Transaktion</h2>
                     <form method="POST">
                         <div class="input-group">
-                            <input class="input--style-2" type="text" placeholder="Empfänger" name="receiver">
+                          <h5>Empfänger</h5>
+                            <input class="input--style-2" type="text" placeholder="Empfänger" name="receiver" <% if(transaction) { %> value="<%-transaction.receiverID%>" <% } %>>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-2" type="text" placeholder="Sender" name="sender">
+                          <h5>Sender</h5>
+                            <input class="input--style-2" type="text" placeholder="Sender" name="sender" <% if(transaction) { %> value="<%-transaction.senderID%>" <% } %>>
                         </div>
                         <div class="row row-space">
                             <div class="col-2">
-                                <div class="input-group">
                                     <div class="input-group">
-                                        <input class="input--style-2" type="text" placeholder="Betrag" name="amount">
+                                      <h5>Betrag</h5>
+                                        <input class="input--style-2" type="text" placeholder="Betrag" <% if(transaction) { %> value="<%-transaction.amount%>" <% } %>  name="amount">
                                     </div>
                                     <div class="input-group">
-                                        <input class="input--style-2" type="text" placeholder="Zweck" name="purpose">
+                                      <h5>Zweck</h5>
+                                        <input class="input--style-2" type="text" placeholder="Zweck" name="purpose" <% if(transaction) { %> value="<%-transaction.purpose%>" <% } %>>
                                     </div>
                                     <div class="input-group">
-                                        <input class="input--style-2" type="text" placeholder="Transaction-Code" name="code">
+                                      <h5>Code</h5>
+                                        <input class="input--style-2" type="text" placeholder="Transaction-Code" name="code" <% if(transaction) { %> value="<%-transaction.code%>" <% } %>>
                                     </div>
                                 </div>
                             </div>
-                                
+                            <div class="p-t-30">
+                              <button class="btn btn--radius btn--green" type="submit">Durchführen</button>
+                          </div>
                         </div>
-                        <div class="p-t-30">
-                            <button class="btn btn--radius btn--green" type="submit">Durchführen</button>
-                        </div>
+                        
                     </form>
                 </div>
             </div>

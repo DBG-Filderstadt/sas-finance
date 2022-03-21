@@ -62,7 +62,7 @@ export class UserService {
         
         return user;
         }else {
-            throw new NotFoundException('Benutzer nicht gefunden, bitte prüfen Sie die ChipID');
+            throw new NotFoundException('[UserService]:getUser Benutzer nicht gefunden, bitte prüfen Sie die ChipID');
         }
     }
 
@@ -137,16 +137,16 @@ export class UserService {
             if(locked == true && user.isLocked == false){
                 user.isLocked = locked;
                 await this.usersRepository.save(user);
-                return "Benutzer "+user.fname + " " + user.lname + " wurde gesperrt.";
+                return "Benutzer "+user.name + " wurde gesperrt.";
             }else if(locked == true && user.isLocked == true){
-                return "Benutzer "+user.fname + " " + user.lname + " ist bereits gesperrt.";
+                return "Benutzer "+user.name + " ist bereits gesperrt.";
             }
             if(locked == false && user.isLocked == true){
                 user.isLocked = locked;
                 await this.usersRepository.save(user);
-                return "Benutzer "+user.fname + " " + user.lname + " wurde entsperrt.";;
+                return "Benutzer "+user.name + " wurde entsperrt.";;
             }else {
-                return "Benutzer "+user.fname + " " + user.lname + " ist bereits entsperrt.";
+                return "Benutzer "+user.name + " ist bereits entsperrt.";
             }
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');

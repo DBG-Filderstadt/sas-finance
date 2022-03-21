@@ -50,19 +50,25 @@ export class TransactionService {
 
     //Führt die sender und receiver id zusammen und leitet die Transaktion ein
     async processTransaction(transactionID, senderID, receiverID, amount, code, purpose?) {
+        console.log(transactionID)
         let state = "pending";
         let stateReason:string;
         //User -> company
-        if(!code){
-        code = 101;
+        console.log(code)
+        if(code === "101"){
+            console.log("Ich bin in 101")
         const senderBalance = await this.userService.getUserBalance(senderID);
+        console.log("2")
         if (senderBalance > amount) {
+            console.log("3")
             //wenn ja speichere Transaktion in transactionHistory Datenbank
             //buche Geld bei Sender ab und füge Geld dem Receiver hinzu
             const receiverAmount = await this.companyService.addMoney(receiverID, amount);
             const senderAmount = await this.userService.removeMoney(senderID, amount);
             state = "success";
+            console.log("4")
             this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, null, purpose);
+            console.log("5")
             return {receiverAmount, senderAmount};
         }else {
             //wenn nein sende Fehler
@@ -73,7 +79,7 @@ export class TransactionService {
             }
         }
         //User -> User
-        if(code == 202)  {
+        if(code === 202)  {
         //Überprüfung ob Sender genügend Geld hat
         const senderBalance = await this.userService.getUserBalance(senderID);
         if (senderBalance > amount || senderBalance === amount) {
