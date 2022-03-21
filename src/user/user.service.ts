@@ -29,6 +29,18 @@ export class UserService {
 
     }
 
+    async search(param) {
+        const users = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.name = :param", { param })
+        .orWhere("user.chipID = :param", { param })
+        .orWhere("user.class = :param", { param })
+        .orWhere("user.company = :param", { param })
+        .orWhere("user.role = :param", { param })
+        .getMany();
+        return users;
+    }
+
     async removeMoney(chipID, amount){
         const user = await this.usersRepository
         .createQueryBuilder("user")

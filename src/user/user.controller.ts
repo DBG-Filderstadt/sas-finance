@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -14,5 +14,10 @@ export class UserController {
         return await this.userService.lockUser(userID, lock);
     }
 
-    
+    @Get('search/:param')
+    async getUser(
+        @Param('param') param: string,
+    ) {
+        return await this.userService.search(param);
+    }
 }
