@@ -148,7 +148,7 @@
           let temp = this.response.replaceAll(input, "<span style=' text-decoration: none; color: green; font-weight: bold;'>" + input + "</span>");
           let output = JSON.parse(temp);
           for(var i=0; i<output.length; i++) {
-            tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
+            tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+users[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
           } 
         }
       }
