@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <%- include('partials/header.ejs') %>
-  <body>
+  <body onload="load()">
     <%- include('partials/navbar.ejs') %>
 
     <div class="container-fluid">
@@ -36,7 +36,7 @@
                   <th>Gesperrt</th>
                 </tr>
               </thead>
-              <tbody id="tbody">
+              <tbody id="test">
 
                 <% for(var i=0; i<users.length; i++) { %>
                   <tr>
@@ -64,7 +64,7 @@
 
       function searchuser() {
         var input = document.getElementById("searchuser").value;
-        var tbody = document.getElementById("tbody");
+        var tbody = document.getElementById("test");
 
         if (input == "") {
           return;
@@ -74,8 +74,16 @@
         xhttp.send();
         
         xhttp.onload = function () {
-          console.log(this.response)
+          tbody.innerHTML = ''
+          let output = JSON.parse(this.response);
+          for(var i=0; i<output.length; i++) {
+            tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
+          } 
         }
+      }
+      function load() {
+        document.getElementById("searchuser").value = "";
+        document.getElementById("searchuser").focus();
       }
     </script>
 
