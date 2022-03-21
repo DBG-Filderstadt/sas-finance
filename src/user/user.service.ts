@@ -32,11 +32,11 @@ export class UserService {
     async search(param) {
         const users = await this.usersRepository
         .createQueryBuilder("user")
-        .where("user.name = :param", { param })
-        .orWhere("user.chipID = :param", { param })
-        .orWhere("user.class = :param", { param })
-        .orWhere("user.company = :param", { param })
-        .orWhere("user.role = :param", { param })
+        .where("user.name LIKE :param", { param: '%' + param + '%' })
+        .orWhere("user.chipID LIKE :param", { param })
+        .orWhere("user.class LIKE :param", { param })
+        .orWhere("user.company LIKE :param", { param })
+        .orWhere("user.role LIKE :param", { param })
         .getMany();
         return users;
     }

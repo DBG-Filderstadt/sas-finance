@@ -41,7 +41,7 @@
                 <% for(var i=0; i<users.length; i++) { %>
                   <tr>
                      <td><%= users[i].id%></td>
-                     <td><%= users[i].fname%> <%= users[i].lname%></td>
+                     <td><%= users[i].name%></td>
                      <td><%= users[i].class%></td>
                      <td><%= users[i].chipID%></td>
                      <td><%= users[i].balance%></td>
@@ -66,10 +66,16 @@
         var input = document.getElementById("searchuser").value;
         var tbody = document.getElementById("tbody");
 
+        if (input == "") {
+          return;
+        }
         const xhttp = new XMLHttpRequest();
         xhttp.open("GET", "../user/search/" + input, true);
         xhttp.send();
-        console.log(this);
+        
+        xhttp.onload = function () {
+          console.log(this.response)
+        }
       }
     </script>
 
