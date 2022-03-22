@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Redirect, Render } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Redirect, Render } from '@nestjs/common';
 import { AdminLogService } from 'src/admin-log/admin-log.service';
 import { CompanyService } from 'src/company/company.service';
 import { TerminalJobModule } from 'src/terminal-job/terminal-job.module';
@@ -117,8 +117,12 @@ export class AdminController {
     @Redirect('/admin/transactions/')
     async newTrans(@Body() body){
         const transactionID = Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6) + "-" + Math.random().toString(36).substring(2, 6);
-
+        //check if a variable contains only numbers
+        if(await this.userService.isValid(body.sender) && await this.userService.isValid(body.receiver)){
         await this.transactionService.processTransaction(transactionID, body.sender, body.receiver, body.amount, body.code, body.purpose);
+        }else {
+            throw new NotFoundException("There is no such user you dumbass.")
+        }
     }
 
     @Get('test')
