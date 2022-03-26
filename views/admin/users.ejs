@@ -40,23 +40,6 @@
               </thead>
               <tbody id="test">
 
-                <% for(var i=0; i<users.length; i++) { %>
-                  <tr>
-                    <td><%= users[i].id%></td>
-                    <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
-                    <td><%= users[i].class%></td>
-                    <td><%= users[i].chipID%></td>
-                    <td><%= users[i].balance%></td>
-                    <td><%= users[i].company%></td>
-                    <td><%= users[i].role%></td>
-                    <td><%= users[i].isLocked%></td>
-                    <% if(users[i].isLocked == false){ %>
-                      <td><button type="button" class="btn btn-danger" onclick="lockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Sperren</button></td>
-                    <% } else{ %>  
-                      <td><button type="button" class="btn btn-success" onclick="unlockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Entsperren</button></td>
-                   <% } %>
-                 </tr>        
-                <% } %>
               </tbody>
             </table>
           </div>
@@ -149,18 +132,36 @@
           let output = JSON.parse(temp);
           for(var i=0; i<output.length; i++) {
             if (output[i].isLocked == true) {
-              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
             } else {
-              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td>' + output[i].name + '</td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
             }
           } 
         }
       }
       function load() {
+
         var tbody = document.getElementById("test");
         document.getElementById("searchuser").value = "";
         document.getElementById("searchuser").focus();
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "../user", true);
+        xhttp.send();
+
+        xhttp.onload = function() {
+          let output = JSON.parse(this.response);
+          for(var i=0; i<output.length; i++) {
+            if (output[i].isLocked == true) {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
+            } else {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
+            }
+          }
+        }
       }
+
+
     </script>
 
     <%- include('partials/bottom.ejs') %>

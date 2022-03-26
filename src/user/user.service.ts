@@ -43,6 +43,7 @@ export class UserService {
     async getAll() {
         const users =  await this.usersRepository
         .createQueryBuilder("user")
+        .take(10)
         .getMany();
 
         return users;
@@ -58,8 +59,22 @@ export class UserService {
         .orWhere("user.class LIKE :input", { input })
         .orWhere("user.company LIKE :input", { input })
         .orWhere("user.role LIKE :input", { input })
+        .take(3)
         .getMany();
         return users;
+    }
+
+    async count(param){
+        let input = `${param}%`
+        const count = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.name LIKE :input", { input })
+        .orWhere("user.chipID LIKE :input", { input })
+        .orWhere("user.class LIKE :input", { input })
+        .orWhere("user.company LIKE :input", { input })
+        .orWhere("user.role LIKE :input", { input })
+        .getCount();
+        return count;
     }
 
     async removeMoney(chipID, amount){
@@ -183,12 +198,5 @@ export class UserService {
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');
         }
-    }
-
-    async getAllUsers(){
-        const users = await this.usersRepository
-        .createQueryBuilder("user")
-        .getMany();
-        return users;
     }
 }

@@ -7,7 +7,7 @@ export class UserController {
 
     @Get('/')
     async getAll() {
-        return await this.userService.getAllUsers();
+        return await this.userService.getAll();
     }
 
     @Post(':userID/lock/:locked')
@@ -24,4 +24,6 @@ export class UserController {
     ) {
         return await this.userService.search(param);
     }
+
+    
 }
