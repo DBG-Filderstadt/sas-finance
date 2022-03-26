@@ -14,11 +14,11 @@
             <div class="btn-toolbar mb-2 mb-md-0">
 
               <input type="text" class="form-control" id="searchuser" oninput="searchuser();" placeholder="User suchen" aria-label="User suchen">
-
-
-
-              
             </div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination" id="pages">
+              </ul>
+            </nav>
           </div>
          
 
@@ -140,13 +140,39 @@
         }
       }
       function load() {
+        let querryString = window.location.search;
+        let urlParams = new URLSearchParams(querryString);
+        let page = urlParams.get('page');
+        if(page == null) {
+          page = 1;
+        }
 
         var tbody = document.getElementById("test");
+        var pagination = document.getElementById("pages");
         document.getElementById("searchuser").value = "";
         document.getElementById("searchuser").focus();
 
+        const countxhttp = new XMLHttpRequest();
+        countxhttp.open("GET", "../user/usercount", true);
+        countxhttp.send();
+
+        countxhttp.onload = function() {
+          let count = this.response;
+          let pages = Math.ceil(count/20);
+          pagination.innerHTML = '';
+          for(var i=1; i<=pages; i++) {
+            if(i == page) {
+              pagination.innerHTML += '<li class="page-item active"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';
+            } else {
+              pagination.innerHTML += '<li class="page-item"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';
+            }
+          }
+        }
+
+
         const xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "../user", true);
+        let skip = Math.round(page* 20 - 20);
+        xhttp.open("GET", `../user/all/${skip}`, true);
         xhttp.send();
 
         xhttp.onload = function() {

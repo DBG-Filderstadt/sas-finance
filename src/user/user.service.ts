@@ -52,10 +52,11 @@ export class UserService {
         return amount;
     }
 
-    async getAll() {
+    async getAllUsers(skip) {
         const users =  await this.usersRepository
         .createQueryBuilder("user")
-        .take(10)
+        .skip(skip)
+        .take(20)
         .getMany();
 
         return users;
@@ -71,9 +72,16 @@ export class UserService {
         .orWhere("user.class LIKE :input", { input })
         .orWhere("user.company LIKE :input", { input })
         .orWhere("user.role LIKE :input", { input })
-        .take(3)
+        .take(20)
         .getMany();
         return users;
+    }
+
+    async countAll(){
+        const count = await this.usersRepository
+        .createQueryBuilder("user")
+        .getCount();
+        return count;
     }
 
     async count(param){

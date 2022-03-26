@@ -22,9 +22,9 @@ export class AdminController {
     @Get('/users')
     @Render('admin/users')
     async users( ){
-        const users = await this.userService.getAll();
-        return{ users: users};
-        } 
+        //const users = await this.userService.getAll();
+        //return{ users: users};
+    } 
 
     @Get('/user/:id')
     @Render('admin/userprofile.ejs')

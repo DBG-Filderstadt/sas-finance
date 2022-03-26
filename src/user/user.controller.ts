@@ -5,9 +5,16 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get('/')
-    async getAll() {
-        return await this.userService.getAll();
+    @Get('/all/:skip')
+    async getAll(
+        @Param('skip') skip: number,
+    ) {
+        return await this.userService.getAllUsers(skip);
+    }
+
+    @Get('usercount')
+    async getUserCount() {
+        return await this.userService.countAll();
     }
 
     @Post(':userID/lock/:locked')
