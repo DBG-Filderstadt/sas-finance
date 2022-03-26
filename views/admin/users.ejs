@@ -14,15 +14,15 @@
             <div class="btn-toolbar mb-2 mb-md-0">
 
               <input type="text" class="form-control" id="searchuser" oninput="searchuser();" placeholder="User suchen" aria-label="User suchen">
-
-
-
-              
             </div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination" id="pages">
+              </ul>
+            </nav>
           </div>
          
 
-          <h2>Alle Benutzer</h2>
+          
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
@@ -40,23 +40,6 @@
               </thead>
               <tbody id="test">
 
-                <% for(var i=0; i<users.length; i++) { %>
-                  <tr>
-                    <td><%= users[i].id%></td>
-                    <td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/<%=users[i].chipID%>"><%= users[i].name%></a></td>
-                    <td><%= users[i].class%></td>
-                    <td><%= users[i].chipID%></td>
-                    <td><%= users[i].balance%></td>
-                    <td><%= users[i].company%></td>
-                    <td><%= users[i].role%></td>
-                    <td><%= users[i].isLocked%></td>
-                    <% if(users[i].isLocked == false){ %>
-                      <td><button type="button" class="btn btn-danger" onclick="lockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Sperren</button></td>
-                    <% } else{ %>  
-                      <td><button type="button" class="btn btn-success" onclick="unlockUser('<%= users[i].chipID%>', '<%= users[i].name%>')">Entsperren</button></td>
-                   <% } %>
-                 </tr>        
-                <% } %>
               </tbody>
             </table>
           </div>
@@ -148,15 +131,63 @@
           let temp = this.response.replaceAll(input, "<span style=' text-decoration: none; color: green; font-weight: bold;'>" + input + "</span>");
           let output = JSON.parse(temp);
           for(var i=0; i<output.length; i++) {
-            tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td><a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+users[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td></tr>';  
+            if (output[i].isLocked == true) {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
+            } else {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
+            }
           } 
         }
       }
       function load() {
+        let querryString = window.location.search;
+        let urlParams = new URLSearchParams(querryString);
+        let page = urlParams.get('page');
+        if(page == null) {
+          page = 1;
+        }
+
         var tbody = document.getElementById("test");
+        var pagination = document.getElementById("pages");
         document.getElementById("searchuser").value = "";
         document.getElementById("searchuser").focus();
+
+        const countxhttp = new XMLHttpRequest();
+        countxhttp.open("GET", "../user/usercount", true);
+        countxhttp.send();
+
+        countxhttp.onload = function() {
+          let count = this.response;
+          let pages = Math.ceil(count/40);
+          pagination.innerHTML = '';
+          for(var i=1; i<=pages; i++) {
+            if(i == page) {
+              pagination.innerHTML += '<li class="page-item active"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';
+            } else {
+              pagination.innerHTML += '<li class="page-item"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';
+            }
+          }
+        }
+
+
+        const xhttp = new XMLHttpRequest();
+        let skip = Math.round(page* 40 - 40);
+        xhttp.open("GET", `../user/all/${skip}`, true);
+        xhttp.send();
+
+        xhttp.onload = function() {
+          let output = JSON.parse(this.response);
+          for(var i=0; i<output.length; i++) {
+            if (output[i].isLocked == true) {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+`<td><button type="button" class="btn btn-success" onclick="unlockUser('${output[i].chipID}', '${output[i].name}')">Entsperren</button></td></tr>`;  
+            } else {
+              tbody.innerHTML += '<tr><td>' + output[i].id + '</td><td> <a style="text-decoration: none; color:rgb(44, 44, 44);font-weight: bold;" href="/admin/user/'+output[i].chipID+'">' + output[i].name + '</a></td><td>' + output[i].class + '</td><td>' + output[i].chipID + '</td><td>' + output[i].balance + '</td><td>' + output[i].company + '</td><td>' + output[i].role + '</td><td>' + output[i].isLocked + '</td>'+ `<td><button type="button" class="btn btn-danger" onclick="lockUser('${output[i].chipID}', '${output[i].name}')">Sperren</button></td></tr>`;
+            }
+          }
+        }
       }
+
+
     </script>
 
     <%- include('partials/bottom.ejs') %>

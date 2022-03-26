@@ -11,14 +11,25 @@ export class UserService {
         this.usersRepository = connection.getRepository(User);
     }
 
-    async updateUser(chipID, cls, balance, role, company, name){
+    async isValid(chipID): Promise<boolean>{
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    async updateUser(chipID, cls, role, company, name){
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID })
         .getOne();
         if(user){
             user.class = cls;
-            user.balance = balance;
             user.role = role;
             user.company = company;
             user.name = name;
@@ -40,9 +51,11 @@ export class UserService {
         return amount;
     }
 
-    async getAll() {
+    async getAllUsers(skip) {
         const users =  await this.usersRepository
         .createQueryBuilder("user")
+        .skip(skip)
+        .take(40)
         .getMany();
 
         return users;
@@ -58,8 +71,29 @@ export class UserService {
         .orWhere("user.class LIKE :input", { input })
         .orWhere("user.company LIKE :input", { input })
         .orWhere("user.role LIKE :input", { input })
+        .take(40)
         .getMany();
         return users;
+    }
+
+    async countAll(){
+        const count = await this.usersRepository
+        .createQueryBuilder("user")
+        .getCount();
+        return count;
+    }
+
+    async count(param){
+        let input = `${param}%`
+        const count = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.name LIKE :input", { input })
+        .orWhere("user.chipID LIKE :input", { input })
+        .orWhere("user.class LIKE :input", { input })
+        .orWhere("user.company LIKE :input", { input })
+        .orWhere("user.role LIKE :input", { input })
+        .getCount();
+        return count;
     }
 
     async removeMoney(chipID, amount){
@@ -87,7 +121,6 @@ export class UserService {
     }
 
     async getUser(chipID): Promise<User>{
-        console.log(chipID)
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID: chipID })
@@ -184,12 +217,5 @@ export class UserService {
         }else {
             throw new NotFoundException('Benutzer nicht gefunden');
         }
-    }
-
-    async getAllUsers(){
-        const users = await this.usersRepository
-        .createQueryBuilder("user")
-        .getMany();
-        return users;
     }
 }
