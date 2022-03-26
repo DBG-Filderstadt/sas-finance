@@ -32,15 +32,7 @@ export class AdminController {
         const user = await this.userService.getUser(id);
         return{ user: user};
         } 
-
-    @Post('/user/:id')
-    @Redirect('/admin/users')
-    async updateUser(@Body() body, @Param('id') id: string){
-        const user = await this.userService.updateUser(id, body.class, body.balance, body.role, body.company, body.name);
         
-    }
-
-
     @Get('/transactions')
     @Render('admin/transactions')
         async transaction(){

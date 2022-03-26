@@ -23,14 +23,13 @@ export class UserService {
         }
     }
 
-    async updateUser(chipID, cls, balance, role, company, name){
+    async updateUser(chipID, cls, role, company, name){
         const user = await this.usersRepository
         .createQueryBuilder("user")
         .where("user.chipID = :chipID", { chipID })
         .getOne();
         if(user){
             user.class = cls;
-            user.balance = balance;
             user.role = role;
             user.company = company;
             user.name = name;

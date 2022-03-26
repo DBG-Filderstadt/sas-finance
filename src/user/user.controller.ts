@@ -17,6 +17,18 @@ export class UserController {
         return await this.userService.countAll();
     }
 
+    @Post(':userID/edit')
+    async editUser(
+        @Param('userID') userID: string,
+        @Body('name') name: string,
+        @Body('class') cls: string,
+        @Body('company') company: string,
+        @Body('role') role: string,
+    ) {
+        return await this.userService.updateUser(userID, cls, role, company, name);
+    }
+
+
     @Post(':userID/lock/:locked')
     async lockUser(
         @Param('userID') userID: string,
