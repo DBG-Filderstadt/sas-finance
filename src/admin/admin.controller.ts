@@ -28,8 +28,7 @@ export class AdminController {
 
     @Get('/user/:id')
     @Render('admin/userprofile.ejs')
-    async user(@Param('id') id: string){
-        console.log(id)
+    async user(@Param('id') id: string){ 
         const user = await this.userService.getUser(id);
         return{ user: user};
         } 
