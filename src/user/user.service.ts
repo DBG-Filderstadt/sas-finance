@@ -11,6 +11,18 @@ export class UserService {
         this.usersRepository = connection.getRepository(User);
     }
 
+    async isValid(chipID): Promise<boolean>{
+        const user = await this.usersRepository
+        .createQueryBuilder("user")
+        .where("user.chipID = :chipID", { chipID })
+        .getOne();
+        if(user){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     async updateUser(chipID, cls, balance, role, company, name){
         const user = await this.usersRepository
         .createQueryBuilder("user")
