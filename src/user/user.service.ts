@@ -56,7 +56,7 @@ export class UserService {
         const users =  await this.usersRepository
         .createQueryBuilder("user")
         .skip(skip)
-        .take(20)
+        .take(40)
         .getMany();
 
         return users;
@@ -72,7 +72,7 @@ export class UserService {
         .orWhere("user.class LIKE :input", { input })
         .orWhere("user.company LIKE :input", { input })
         .orWhere("user.role LIKE :input", { input })
-        .take(20)
+        .take(40)
         .getMany();
         return users;
     }

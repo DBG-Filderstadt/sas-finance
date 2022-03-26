@@ -158,7 +158,7 @@
 
         countxhttp.onload = function() {
           let count = this.response;
-          let pages = Math.ceil(count/20);
+          let pages = Math.ceil(count/40);
           pagination.innerHTML = '';
           for(var i=1; i<=pages; i++) {
             if(i == page) {
@@ -171,7 +171,7 @@
 
 
         const xhttp = new XMLHttpRequest();
-        let skip = Math.round(page* 20 - 20);
+        let skip = Math.round(page* 40 - 40);
         xhttp.open("GET", `../user/all/${skip}`, true);
         xhttp.send();
 
