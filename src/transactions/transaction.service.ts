@@ -69,7 +69,7 @@ export class TransactionService {
             state = "aborted";
             stateReason = "Insufficient funds";
             this.storeTransaction(transactionID, senderID, receiverID, amount, code, state, stateReason, purpose);
-            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
+            return "Es befindet sich nicht genügend Geld auf dem Konto";
             }
         }
         //User -> User
@@ -89,7 +89,7 @@ export class TransactionService {
             state = "aborted";
             stateReason = "Insufficient funds";
             this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason, purpose);
-            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
+            return "Es befindet sich nicht genügend Geld auf dem Konto";
         }
     }
     //Company -> User
@@ -109,7 +109,7 @@ export class TransactionService {
             state = "aborted";
             stateReason = "Insufficient funds";
             this.storeTransaction(transactionID, senderID, receiverID, amount,code, state, stateReason, purpose);
-            throw new UnauthorizedException("Es befindet sich nicht genügend Geld auf dem Konto");
+            return "Es befindet sich nicht genügend Geld auf dem Konto";
         }
     }
 
@@ -122,7 +122,7 @@ export class TransactionService {
         .where("transaction.transactionID = :transactionID", { transactionID: transactionID })
         .getOne();
         if(transaction.status === "aborted" || transaction.status === "revoked"){
-            throw new UnauthorizedException("Die Transaktion wurde bereits abgebrochen");
+            return "Transaction already revoked";
         }
         transaction.status = "revoked";
         transaction.statusReason = revokeReason;
