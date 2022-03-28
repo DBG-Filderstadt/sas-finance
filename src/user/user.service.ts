@@ -57,9 +57,8 @@ export class UserService {
         .skip(skip)
         .take(25)
         .getMany();
-
+        
         return users;
-
     }
 
     async search(param) {
