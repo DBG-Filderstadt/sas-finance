@@ -5,6 +5,21 @@ import { TransactionService } from "./transaction.service";
 export class TransactionController{
     constructor(private readonly transactionService: TransactionService){}
 
+    
+    //Terminal hat neuen Job und schickt RFID Nummer
+    @Post('/process')
+    async processTransaction(
+    @Body('transactionID') transactionID: string,
+    @Body('rfid') rfid: string,
+    @Body('receiverID') receiverID: string,
+    @Body('amount') amount: number,
+    @Body('code') code: number,
+    @Body('purpose') purpose: string,
+    ) {
+        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount, code, purpose);
+    }
+
+
     //neue Transaktion wird angefragt
     @Post('/new')
     async createTransaction(
@@ -31,18 +46,6 @@ export class TransactionController{
     @Get('/get/:terminalID')
     async getTransactions(@Param('terminalID') terminalID: string) {
         return await this.transactionService.getTransactions(terminalID);
-    }
-
-    //Terminal hat neuen Job und schickt RFID Nummer
-    @Post('/process')
-    async processTransaction(
-    @Body('transactionID') transactionID: string,
-    @Body('rfid') rfid: string,
-    @Body('receiverID') receiverID: string,
-    @Body('amount') amount: number,
-    @Body('code') code: number,
-    ) {
-        return await this.transactionService.processTransaction(transactionID, rfid, receiverID, amount, code);
     }
 
     @Post('/revoke')
