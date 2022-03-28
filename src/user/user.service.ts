@@ -71,7 +71,7 @@ export class UserService {
         .orWhere("user.class LIKE :input", { input })
         .orWhere("user.company LIKE :input", { input })
         .orWhere("user.role LIKE :input", { input })
-        .take(40)
+        .take(25)
         .getMany();
         return users;
     }
