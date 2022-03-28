@@ -143,7 +143,7 @@
         let querryString = window.location.search;
         let urlParams = new URLSearchParams(querryString);
         let page = urlParams.get('page');
-        if(page == null) {
+        if(page === null) {
           page = 1;
         }
 
@@ -161,7 +161,7 @@
           let pages = Math.ceil(count/25);
           pagination.innerHTML = '';
           for(var i=1; i<=pages; i++) {
-            if(i == page) {
+            if(i === page) {
               pagination.innerHTML += '<li class="page-item active"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';
             } else {
               pagination.innerHTML += '<li class="page-item"><a class="page-link" href="?page='+i+'">'+i+'</a></li>';

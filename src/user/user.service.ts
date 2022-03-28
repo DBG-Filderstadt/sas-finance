@@ -55,7 +55,7 @@ export class UserService {
         const users =  await this.usersRepository
         .createQueryBuilder("user")
         .skip(skip)
-        .take(40)
+        .take(25)
         .getMany();
 
         return users;
