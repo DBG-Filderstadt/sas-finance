@@ -41,6 +41,12 @@ export class TransactionController{
         return await this.transactionService.getTransactionbyTransactionID(transactionID);
     }
 
+    @Get('/getbyUserID/:userID')
+    async getTransactionBySenderID(@Param('userID') userID: string) {
+        return await this.transactionService.getTransactionsByUserID(userID);
+    }
+
+
     //Terminal fragt nach neuem Job
     //@Param terminalID
     @Get('/get/:terminalID')

@@ -66,15 +66,44 @@
                 </div>
               </div>
 
-              <div class="col-md-5">
+              <div class="col-md-7">
                 <div class="card">
                   <div class="card-header">
                     <h5>Buchungen</h5>
                   </div>
                   <div class="card-body">
-                    
+                    <table class="table table-striped table-sm">
+                      <thead>
+                        <tr>
+                          <th>Empfänger</th>
+                          <th>Sender</th>
+                          <th>Betrag</th>
+                          <th>Code</th>
+                          <th>ID</th>
+                          <th>Status</th>
+                          <th>Verwendungszweck</th>
+                          <th>Zeitpunkt</th>
+                        </tr>
+                      </thead>
+                      <tbody id="test">
+                        <% for(var i = 0; i < transactions.length; i++) { %>
+                          <tr>
+                            <td><%-transactions[i].receiverName%></td>
+                            <td><%-transactions[i].senderName%></td>
+                            <td><%-transactions[i].amount%></td>
+                            <td><%-transactions[i].code%></td>
+                            <td><%-transactions[i].transactionID%></td>
+                            <td data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom"><%-transactions[i].status%></td>
+                            <td><%-transactions[i].purpose%></td>
+                            <td><%-transactions[i].transactionTime%></td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
                 </div>
-              </div>
+
+            </div>
+
           
           <!--Toast-->
           <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 0">

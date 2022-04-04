@@ -30,7 +30,33 @@ export class AdminController {
     @Render('admin/userprofile.ejs')
     async user(@Param('id') id: string){ 
         const user = await this.userService.getUser(id);
-        return{ user: user};
+        let transactions = await this.transactionService.getTransactionsByUserID(id); 
+        transactions = transactions.reverse();
+        for (let i = 0; i < transactions.length; i++){
+            const transaction = transactions[i];
+            let sender;
+            let receiver;
+            if(transaction.code === "202"){
+                 sender = await this.userService.getUser(transaction.senderID);
+                 receiver = await this.userService.getUser(transaction.receiverID);
+            }
+            if(transaction.code === "101"){
+                sender = await this.userService.getUser(transaction.senderID);
+                receiver = await this.companyService.getCompany(transaction.receiverID);
+            }
+
+            if(transaction.code === "303"){
+                sender = await this.companyService.getCompany(transaction.senderID);
+                receiver = await this.companyService.getCompany(transaction.receiverID);
+            }
+           
+            var sName = JSON.stringify(sender.name);
+            var rName = JSON.stringify(receiver.name);
+            transaction.senderName = sName.replace(/\"/g, "");
+            transaction.receiverName = rName.replace(/\"/g, "");
+            transactions[i] = transaction;
+        }
+        return{ user, transactions };
         } 
         
     @Get('/transactions')

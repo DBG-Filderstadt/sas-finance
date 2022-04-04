@@ -30,6 +30,16 @@ export class TransactionService {
         }
     }
 
+    async getTransactionsByUserID(userID) {
+        const transactions = await this.transactionRepository
+        .createQueryBuilder("transaction")
+        .where("transaction.receiverID = :userID", { userID: userID })
+        .orWhere("transaction.senderID = :userID", { userID: userID })
+        .take(10)
+        .getMany();
+        return transactions;
+    }
+
     async getTransactionbyTransactionID(transactionID) {
         const transaction = await this.transactionRepository
         .createQueryBuilder("transaction")
